@@ -39,7 +39,7 @@ async function run() {
                 if (!fs.existsSync("./tools/ffmpeg")) {
                     fs.mkdirSync("./tools/ffmpeg");
                 }
-                fs.rename(`temp/${file.file}`, "tools/ffmpeg/ffmpeg.exe", async (err) => {
+                fs.rename(`temp/${file.file}`, "tools/ffmpeg/ffmpeg.exe", async(err) => {
                     if (err) {
                         reject(err)
                     }
@@ -96,16 +96,16 @@ async function downloadFfmpeg() {
 }
 
 async function start(client) {
-    client.onMessage(async (message) => {
+    client.onMessage(async(message) => {
         console.log(message);
         client
-        .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers aqui criados, usem com sabedoria!!!!*')
-        .then((result) => {
-          console.log('Result: ', result); //return object success
-        })
-        .catch((erro) => {
-          console.error('Error when sending: ', erro); //return object error
-        });
+            .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
+            .then((result) => {
+                console.log('Result: ', result); //return object success
+            })
+            .catch((erro) => {
+                console.error('Error when sending: ', erro); //return object error
+            });
         await genSticker(client, message);
     });
 }
@@ -235,7 +235,7 @@ async function genSticker(client, message) {
                 });
         });
 
-        const compressGif = async (onProgress) => {
+        const compressGif = async(onProgress) => {
             const result = await compress({
                 source: `./temp/${id}mod.gif`,
                 destination: `./temp/opt/`,
@@ -267,7 +267,7 @@ async function genSticker(client, message) {
             } = result;
         };
 
-        await compressGif(async (error, statistic, completed) => {
+        await compressGif(async(error, statistic, completed) => {
             if (error) {
                 console.log('Error happen while processing file');
                 console.log(error);
@@ -288,17 +288,17 @@ async function genSticker(client, message) {
                 });
 
         });
-        await glob.Glob(`./temp/*${id}*`, async function (er, files) {
+        await glob.Glob(`./temp/*${id}*`, async function(er, files) {
             files.forEach(file => {
                 fs.unlinkSync(file);
             });
         });
-        await glob.Glob(`./temp/ext/*${id}*`, async function (er, files) {
+        await glob.Glob(`./temp/ext/*${id}*`, async function(er, files) {
             files.forEach(file => {
                 fs.unlinkSync(file);
             });
         });
-        await glob.Glob(`./temp/opt/*${id}*`, async function (er, files) {
+        await glob.Glob(`./temp/opt/*${id}*`, async function(er, files) {
             files.forEach(file => {
                 fs.unlinkSync(file);
             });
