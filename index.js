@@ -97,15 +97,6 @@ async function downloadFfmpeg() {
 
 async function start(client) {
     client.onMessage(async(message) => {
-        console.log(message);
-        client
-            .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
-            .then((result) => {
-                console.log('Result: ', result); //return object success
-            })
-            .catch((erro) => {
-                console.error('Error when sending: ', erro); //return object error
-            });
         await genSticker(client, message);
     });
 }
@@ -136,6 +127,9 @@ async function genSticker(client, message) {
             .catch(err => {
                 console.log(err)
             });
+
+        client
+            .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
 
         await client
             .sendImageAsSticker(message.from, file)
@@ -276,7 +270,10 @@ async function genSticker(client, message) {
 
             console.log('Sucefully processed file');
 
-            console.log(statistic)
+            // console.log(statistic)
+
+            client
+            .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
 
             await client
                 .sendImageAsStickerGif(message.from, statistic.path_out_new)
@@ -303,5 +300,8 @@ async function genSticker(client, message) {
                 fs.unlinkSync(file);
             });
         });
+    }else{
+        client
+        .sendText(message.from, '*Envie-me uma imagem ou gif de ate 15 segundos, para receber de volta em forma de figurinha*')
     }
 }
