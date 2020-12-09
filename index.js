@@ -39,7 +39,7 @@ async function run() {
                 if (!fs.existsSync("./tools/ffmpeg")) {
                     fs.mkdirSync("./tools/ffmpeg");
                 }
-                fs.rename(`temp/${file.file}`, "tools/ffmpeg/ffmpeg.exe", async(err) => {
+                fs.rename(`temp/${file.file}`, "tools/ffmpeg/ffmpeg.exe", async (err) => {
                     if (err) {
                         reject(err)
                     }
@@ -96,7 +96,7 @@ async function downloadFfmpeg() {
 }
 
 async function start(client) {
-    client.onMessage(async(message) => {
+    client.onMessage(async (message) => {
         await genSticker(client, message);
     });
 }
@@ -109,15 +109,8 @@ async function genSticker(client, message) {
 
         await sharp(decryptFile)
             .resize({
-                width: 800,
-                height: 800,
-                fit: 'contain',
-                background: {
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                    alpha: 0
-                }
+                width: 512,
+                height: 512,
             })
             .toFormat('png')
             .toFile(file)
@@ -154,9 +147,9 @@ async function genSticker(client, message) {
         await new Promise((resolve, reject) => {
             ffmpeg(`./temp/${file}`)
                 .setFfmpegPath(ffmpegStatic)
-                .complexFilter(`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`)
                 .toFormat('gif')
                 .save(`./temp/${id}.gif`)
+                .size('512x512')
                 .on('error', (err) => {
                     console.log(`[ffmpeg] error: ${err.message}`);
                     reject(err);
@@ -215,10 +208,10 @@ async function genSticker(client, message) {
 
         await new Promise((resolve, reject) => {
             ffmpeg(`./temp/ext/${id}%d.png`)
-                .complexFilter(`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`)
                 .fpsOutput(15)
                 .toFormat('gif')
                 .save(`./temp/${id}mod.gif`)
+                .size('512x512')
                 .on('error', (err) => {
                     console.log(`[ffmpeg] error: ${err.message}`);
                     reject(err);
@@ -229,7 +222,7 @@ async function genSticker(client, message) {
                 });
         });
 
-        const compressGif = async(onProgress) => {
+        const compressGif = async (onProgress) => {
             const result = await compress({
                 source: `./temp/${id}mod.gif`,
                 destination: `./temp/opt/`,
@@ -261,7 +254,7 @@ async function genSticker(client, message) {
             } = result;
         };
 
-        await compressGif(async(error, statistic, completed) => {
+        await compressGif(async (error, statistic, completed) => {
             if (error) {
                 console.log('Error happen while processing file');
                 console.log(error);
@@ -273,7 +266,7 @@ async function genSticker(client, message) {
             // console.log(statistic)
 
             client
-            .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
+                .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
 
             await client
                 .sendImageAsStickerGif(message.from, statistic.path_out_new)
@@ -285,23 +278,23 @@ async function genSticker(client, message) {
                 });
 
         });
-        await glob.Glob(`./temp/*${id}*`, async function(er, files) {
+        await glob.Glob(`./temp/*${id}*`, async function (er, files) {
             files.forEach(file => {
                 fs.unlinkSync(file);
             });
         });
-        await glob.Glob(`./temp/ext/*${id}*`, async function(er, files) {
+        await glob.Glob(`./temp/ext/*${id}*`, async function (er, files) {
             files.forEach(file => {
                 fs.unlinkSync(file);
             });
         });
-        await glob.Glob(`./temp/opt/*${id}*`, async function(er, files) {
+        await glob.Glob(`./temp/opt/*${id}*`, async function (er, files) {
             files.forEach(file => {
                 fs.unlinkSync(file);
             });
         });
-    }else{
+    } else {
         client
-        .sendText(message.from, '*Envie-me uma imagem ou gif de ate 15 segundos, para receber de volta em forma de figurinha*')
+            .sendText(message.from, '*Envie-me uma imagem ou gif de ate 15 segundos, para receber de volta em forma de figurinha*')
     }
 }
