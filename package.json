@@ -21,6 +21,6 @@
     "pngquant-bin": "^6.0.0",
     "progress": "^2.0.3",
     "sharp": "^0.26.2",
-    "venom-bot": "^2.1.1"
+    "venom-bot": "^2.1.2"
   }
 }
