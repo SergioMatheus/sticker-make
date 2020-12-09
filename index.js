@@ -108,9 +108,9 @@ async function genSticker(client, message) {
         const file = `./temp/${id}.png`;
 
         await sharp(decryptFile)
-            .resize({
-                width: 512,
-                height: 512,
+            .resize(512, 512, {
+                fit: sharp.fit.contain,
+                background: { r: 0, g: 0, b: 0, alpha: 0 }
             })
             .toFormat('png')
             .toFile(file)
