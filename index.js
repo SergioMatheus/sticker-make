@@ -39,7 +39,7 @@ async function run() {
                 if (!fs.existsSync("./tools/ffmpeg")) {
                     fs.mkdirSync("./tools/ffmpeg");
                 }
-                fs.rename(`temp/${file.file}`, "tools/ffmpeg/ffmpeg.exe", async(err) => {
+                fs.rename(`temp/${file.file}`, "tools/ffmpeg/ffmpeg.exe", async (err) => {
                     if (err) {
                         reject(err)
                     }
@@ -56,7 +56,7 @@ async function run() {
     }
 
     venom
-        .create()
+        .create({ autoClose: 6000 })
         .then((client) => start(client))
         .catch((erro) => {
             console.log(erro);
@@ -96,9 +96,62 @@ async function downloadFfmpeg() {
 }
 
 async function start(client) {
-    client.onMessage(async(message) => {
-        await genSticker(client, message);
+    client.onMessage(async (message) => {
+        // const messages = await client.getAllUnreadMessages();
+        // if (messages.length > 0) {
+        // messages.forEach(async (message) => {
+        // await checkMessage(message, client);
+        // })
+
+        // } else {
+        if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
+            await genStickerGroup(client, message);
+        } else if (!message.isGroupMsg) {
+            await genSticker(client, message);
+        }
+        // }
+
     });
+}
+
+async function genStickerGroup(client, message) {
+    const id = crypto.randomBytes(16).toString("hex");
+    if (message.type === "image") {
+        const decryptFile = await client.decryptFile(message);
+        const file = `./temp/${id}.png`;
+
+        await sharp(decryptFile)
+            .resize(512, 512, {
+                fit: sharp.fit.contain,
+                background: { r: 0, g: 0, b: 0, alpha: 0 }
+            })
+            .toFormat('png')
+            .toFile(file)
+            .then(info => {
+                console.log(info)
+            })
+            .catch(err => {
+                console.log(err)
+            });
+
+        client
+            .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
+        // await client.stopTyping(message.from);
+        await client
+            .sendImageAsSticker(message.from, file)
+            .then((result) => {
+                console.log('Result: ', result);
+            })
+            .catch((erro) => {
+                console.error('Error when sending: ', erro);
+            });
+
+        await client.sendSeen(message.from);
+        await fs.unlinkSync(file);
+    } else {
+        client
+            .sendText(message.from, '*Envie-me uma imagem, para receber de volta em forma de figurinha*')
+    }
 }
 
 async function genSticker(client, message) {
@@ -123,7 +176,6 @@ async function genSticker(client, message) {
 
         client
             .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
-
         await client
             .sendImageAsSticker(message.from, file)
             .then((result) => {
@@ -133,6 +185,7 @@ async function genSticker(client, message) {
                 console.error('Error when sending: ', erro);
             });
 
+        await client.sendSeen(message.from);
         await fs.unlinkSync(file);
     } else if (message.type === "video" && message.duration < 15) {
         const decryptFile = await client.decryptFile(message);
@@ -223,7 +276,7 @@ async function genSticker(client, message) {
         //         });
         // });
 
-        const compressGif = async(onProgress) => {
+        const compressGif = async (onProgress) => {
             const result = await compress({
                 source: `./temp/${id}mod.gif`,
                 destination: `./temp/opt/`,
@@ -255,7 +308,7 @@ async function genSticker(client, message) {
             } = result;
         };
 
-        await compressGif(async(error, statistic, completed) => {
+        await compressGif(async (error, statistic, completed) => {
             if (error) {
                 console.log('Error happen while processing file');
                 console.log(error);
@@ -266,8 +319,9 @@ async function genSticker(client, message) {
 
             // console.log(statistic)
 
+            // await client.stopTyping(message.from);
             client
-                .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
+                .sendText(message.from, '_*Não nos Responsabilizamos pelos Stickers criados*_')
 
             await client
                 .sendImageAsStickerGif(message.from, statistic.path_out_new)
@@ -278,18 +332,20 @@ async function genSticker(client, message) {
                     console.error('Error when sending: ', erro);
                 });
 
+            await client.sendSeen(message.from);
+
         });
-        await glob.Glob(`./temp/*${id}*`, async function(er, files) {
+        await glob.Glob(`./temp/*${id}*`, async function (er, files) {
             files.forEach(file => {
                 fs.unlinkSync(file);
             });
         });
-        await glob.Glob(`./temp/ext/*${id}*`, async function(er, files) {
+        await glob.Glob(`./temp/ext/*${id}*`, async function (er, files) {
             files.forEach(file => {
                 fs.unlinkSync(file);
             });
         });
-        await glob.Glob(`./temp/opt/*${id}*`, async function(er, files) {
+        await glob.Glob(`./temp/opt/*${id}*`, async function (er, files) {
             files.forEach(file => {
                 fs.unlinkSync(file);
             });
