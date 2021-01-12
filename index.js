@@ -149,8 +149,10 @@ async function genSticker(client, message) {
         });
 
         await new Promise((resolve, reject) => {
+            let complexFilter = `scale=512:512:force_original_aspect_ratio=decrease,fps=15 , pad=512:512:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`;
+
             ffmpeg(`./temp/${file}`)
-                .complexFilter(`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`)
+                .complexFilter(complexFilter)
                 .setFfmpegPath(ffmpegStatic)
                 .toFormat('gif')
                 .save(`./temp/${id}mod.gif`)
@@ -204,21 +206,27 @@ async function genSticker(client, message) {
             }
 
             console.log('Sucefully processed file');
+            if (statistic.size_output <= 10000000) {
 
-            client
-                .sendText(message.from, '_*Não nos Responsabilizamos pelos Stickers criados*_')
 
-            await client
-                .sendImageAsStickerGif(message.from, statistic.path_out_new)
-                .then((result) => {
-                    console.log('Result: ', result);
-                })
-                .catch((erro) => {
-                    console.error('Error when sending: ', erro);
-                });
+                client
+                    .sendText(message.from, '_*Não nos Responsabilizamos pelos Stickers criados*_')
 
-            await client.sendSeen(message.from);
+                await client
+                    .sendImageAsStickerGif(message.from, statistic.path_out_new)
+                    .then((result) => {
+                        console.log('Mensagem enviada para: ', result.to.pushname);
+                    })
+                    .catch((erro) => {
+                        console.error('Error ao enviar a mensagem: ', erro);
+                    });
 
+                await client.sendSeen(message.from);
+
+            }else{
+                client
+                .sendText(message.from, '_*O Gif indicado nao pode ser convertido, por ser muito grande*_')
+            }
         });
         await glob.Glob(`./temp/*${id}*`, async function (er, files) {
             files.forEach(file => {
