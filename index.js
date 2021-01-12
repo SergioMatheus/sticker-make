@@ -98,50 +98,11 @@ async function downloadFfmpeg() {
 async function start(client) {
     client.onMessage(async (message) => {
         if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
-            await genStickerGroup(client, message);
+            await genSticker(client, message);
         } else if (!message.isGroupMsg) {
             await genSticker(client, message);
         }
     });
-}
-
-async function genStickerGroup(client, message) {
-    const id = crypto.randomBytes(16).toString("hex");
-    if (message.type === "image") {
-        const decryptFile = await client.decryptFile(message);
-        const file = `./temp/${id}.png`;
-
-        await sharp(decryptFile)
-            .resize(512, 512, {
-                fit: sharp.fit.contain,
-                background: { r: 0, g: 0, b: 0, alpha: 0 }
-            })
-            .toFormat('png')
-            .toFile(file)
-            .then(info => {
-                console.log(info)
-            })
-            .catch(err => {
-                console.log(err)
-            });
-
-        client
-            .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
-        await client
-            .sendImageAsSticker(message.from, file)
-            .then((result) => {
-                console.log('Result: ', result);
-            })
-            .catch((erro) => {
-                console.error('Error when sending: ', erro);
-            });
-
-        await client.sendSeen(message.from);
-        await fs.unlinkSync(file);
-    } else {
-        client
-            .sendText(message.from, '*Envie-me uma imagem, para receber de volta em forma de figurinha*')
-    }
 }
 
 async function genSticker(client, message) {
