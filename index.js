@@ -97,20 +97,11 @@ async function downloadFfmpeg() {
 
 async function start(client) {
     client.onMessage(async (message) => {
-        // const messages = await client.getAllUnreadMessages();
-        // if (messages.length > 0) {
-        // messages.forEach(async (message) => {
-        // await checkMessage(message, client);
-        // })
-
-        // } else {
         if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
             await genStickerGroup(client, message);
         } else if (!message.isGroupMsg) {
             await genSticker(client, message);
         }
-        // }
-
     });
 }
 
@@ -136,7 +127,6 @@ async function genStickerGroup(client, message) {
 
         client
             .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
-        // await client.stopTyping(message.from);
         await client
             .sendImageAsSticker(message.from, file)
             .then((result) => {
@@ -203,7 +193,6 @@ async function genSticker(client, message) {
                 .setFfmpegPath(ffmpegStatic)
                 .toFormat('gif')
                 .save(`./temp/${id}mod.gif`)
-                // .size('512x512')
                 .on('error', (err) => {
                     console.log(`[ffmpeg] error: ${err.message}`);
                     reject(err);
@@ -213,68 +202,6 @@ async function genSticker(client, message) {
                     resolve();
                 });
         });
-
-        // await new Promise((resolve, reject) => {
-        //     ffmpeg(`./temp/${id}.gif`)
-        //         .save(`./temp/ext/${id}%d.png`)
-        //         .on('error', (err) => {
-        //             console.log(`[ffmpeg] error: ${err.message}`);
-        //             reject(err);
-        //         })
-        //         .on('end', () => {
-        //             console.log('[ffmpeg] finished');
-        //             resolve();
-        //         });
-        // });
-
-        // console.log("Color treated");
-        // const frame1 = await Jimp.read(`./temp/ext/${id}1.png`);
-        // for (let i = 1; i < 320; i++) {
-        //     for (let j = 1; j < 320; j++) {
-        //         let colors = await Jimp.intToRGBA(frame1.getPixelColor(i, j))
-        //         if (colors.r > 155) {
-        //             colors.r = colors.r - 5
-        //         } else {
-        //             colors.r = colors.r + 5
-        //         }
-        //         if (colors.g > 155) {
-        //             colors.g = colors.g - 5
-        //         } else {
-        //             colors.g = colors.g + 5
-        //         }
-        //         if (colors.b > 155) {
-        //             colors.b = colors.b - 5
-        //         } else {
-        //             colors.b = colors.b + 5
-        //         }
-        //         if (colors.a > 155) {
-        //             colors.a = colors.a - 5
-        //         } else {
-        //             colors.a = colors.a + 5
-        //         }
-
-        //         let hex = await Jimp.rgbaToInt(colors.r, colors.g, colors.b, colors.a)
-
-        //         await frame1.setPixelColor(hex, i, j)
-        //     }
-        // }
-        // await frame1.write(`./temp/ext/${id}1.png`)
-
-        // await new Promise((resolve, reject) => {
-        //     ffmpeg(`./temp/ext/${id}%d.png`)
-        //         .fpsOutput(15)
-        //         .toFormat('gif')
-        //         .save(`./temp/${id}mod.gif`)
-        //         .size('512x512')
-        //         .on('error', (err) => {
-        //             console.log(`[ffmpeg] error: ${err.message}`);
-        //             reject(err);
-        //         })
-        //         .on('end', () => {
-        //             console.log('[ffmpeg] finished');
-        //             resolve();
-        //         });
-        // });
 
         const compressGif = async (onProgress) => {
             const result = await compress({
@@ -317,9 +244,6 @@ async function genSticker(client, message) {
 
             console.log('Sucefully processed file');
 
-            // console.log(statistic)
-
-            // await client.stopTyping(message.from);
             client
                 .sendText(message.from, '_*Não nos Responsabilizamos pelos Stickers criados*_')
 
