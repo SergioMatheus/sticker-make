@@ -18,7 +18,7 @@ const {
 run();
 
 async function cleanTemp() {
-    rimraf('./temp', function () {
+    rimraf('./temp', function() {
         if (!fs.existsSync('./temp')) {
             fs.mkdirSync('./temp', {
                 recursive: true
@@ -47,7 +47,7 @@ async function run() {
 }
 
 async function start(client) {
-    client.onMessage(async (message) => {
+    client.onMessage(async(message) => {
         if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
             await genSticker(client, message);
         } else if (!message.isGroupMsg) {
@@ -123,7 +123,7 @@ async function genSticker(client, message) {
                 });
         });
 
-        const compressGif = async (onProgress) => {
+        const compressGif = async(onProgress) => {
             const result = await compress({
                 source: `./temp/${id}mod.gif`,
                 destination: `./temp/opt/`,
@@ -142,9 +142,9 @@ async function genSticker(client, message) {
                         command: "--multipass"
                     },
                     gif: {
-                        engine: "gifsicle",
-                        command: ['--optimize']
-                    }
+                        engine: 'gif2webp',
+                        command: ['-f', '80', '-mixed', '-q', '30', '-m', '2']
+                    },
 
                 }
             });
@@ -155,7 +155,7 @@ async function genSticker(client, message) {
             } = result;
         };
 
-        await compressGif(async (error, statistic, completed) => {
+        await compressGif(async(error, statistic, completed) => {
             if (error) {
                 console.log('Error happen while processing file');
                 console.log(error);
