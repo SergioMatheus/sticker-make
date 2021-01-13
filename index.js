@@ -95,7 +95,7 @@ async function genSticker(client, message) {
 
         await client.sendSeen(message.from);
         // await fs.unlinkSync(file);
-    } else if (message.type === "video" && message.duration < 15) {
+    } else if (message.type === "video") {
         const decryptFile = await client.decryptFile(message);
         const file = `${id}.${mime.extension(message.mimetype)}`;
 
@@ -163,7 +163,7 @@ async function genSticker(client, message) {
             }
 
             console.log('Gif processado com sucesso');
-            if (statistic.size_output <= 1000000) {
+            if (statistic.size_output <= 900000) {
 
                 await client.reply(
                     message.chatId,
