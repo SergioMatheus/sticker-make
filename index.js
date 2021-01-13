@@ -163,7 +163,7 @@ async function genSticker(client, message) {
             }
 
             console.log('Gif processado com sucesso');
-            if (statistic.size_output <= 10000000) {
+            if (statistic.size_output <= 1000000) {
 
                 await client.reply(
                     message.chatId,
