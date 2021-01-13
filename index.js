@@ -38,78 +38,12 @@ async function run() {
 
     await cleanTemp();
 
-    if (!fs.existsSync("./tools/ffmpeg/ffmpeg.exe")) {
-        console.log("ffmpeg.exe not detected");
-        await downloadFfmpeg();
-        console.log("Download completed");
-        console.log("Starting ffmpeg.exe extract");
-        const extract = await new Promise((resolve, reject) => {
-            let file;
-            const extract = Zip.extractFull('./temp/ffmpeg.7z', './temp/', {
-                $progress: true,
-                $bin: "./tools/7zip/7za.exe",
-                recursive: true,
-                $cherryPick: 'ffmpeg.exe'
-            })
-            extract.on('data', data => file = data)
-            extract.on('end', () => {
-                if (!fs.existsSync("./tools/ffmpeg")) {
-                    fs.mkdirSync("./tools/ffmpeg");
-                }
-                fs.rename(`temp/${file.file}`, "tools/ffmpeg/ffmpeg.exe", async (err) => {
-                    if (err) {
-                        reject(err)
-                    }
-                    resolve("Extract completed")
-                })
-            })
-            extract.on('error', reject)
-        })
-        console.log(extract);
-        await fs.rmdirSync("./temp/", {
-            recursive: true
-        });
-        await fs.mkdirSync("./temp");
-    }
-
     venom
         .create({ debug: false, folderNameToken: 'tokens', disableWelcome: true, autoClose: 6000 })
         .then((client) => start(client))
         .catch((erro) => {
             console.log(erro);
         });
-}
-
-async function downloadFfmpeg() {
-    const url = 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.7z'
-    const writer = fs.createWriteStream('./temp/ffmpeg.7z')
-
-    const response = await Axios({
-        url,
-        method: 'GET',
-        responseType: 'stream'
-    })
-    const totalLength = response.headers['content-length']
-
-    console.log('Starting ffmpeg.zip download')
-    const progressBar = new ProgressBar('-> Downloading ffmpeg.exe [:bar] :percent :etas', {
-        width: 40,
-        complete: '=',
-        incomplete: ' ',
-        renderThrottle: 16,
-        total: parseInt(totalLength)
-    })
-
-    response.data.on('data', (chunk) => {
-        progressBar.tick(chunk.length)
-    })
-
-    response.data.pipe(writer)
-
-    return new Promise((resolve, reject) => {
-        writer.on('finish', resolve)
-        writer.on('error', reject)
-    })
 }
 
 async function start(client) {
@@ -160,7 +94,7 @@ async function genSticker(client, message) {
             });
 
         await client.sendSeen(message.from);
-        await fs.unlinkSync(file);
+        // await fs.unlinkSync(file);
     } else if (message.type === "video" && message.duration < 15) {
         const decryptFile = await client.decryptFile(message);
         const file = `${id}.${mime.extension(message.mimetype)}`;
@@ -255,21 +189,6 @@ async function genSticker(client, message) {
                 await client
                     .sendText(message.from, '_*O Gif indicado nao pode ser convertido, por ser muito grande*_')
             }
-        });
-        await glob.Glob(`./temp/*${id}*`, async function (er, files) {
-            files.forEach(file => {
-                fs.unlinkSync(file);
-            });
-        });
-        await glob.Glob(`./temp/ext/*${id}*`, async function (er, files) {
-            files.forEach(file => {
-                fs.unlinkSync(file);
-            });
-        });
-        await glob.Glob(`./temp/opt/*${id}*`, async function (er, files) {
-            files.forEach(file => {
-                fs.unlinkSync(file);
-            });
         });
     } else {
         await client
