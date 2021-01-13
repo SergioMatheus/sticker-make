@@ -9,6 +9,7 @@ const crypto = require("crypto");
 const Jimp = require("jimp");
 const sharp = require("sharp");
 var ffmpegStatic = require('ffmpeg-static');
+var rimraf = require("rimraf");
 const ffmpeg = require("fluent-ffmpeg");
 const {
     compress
@@ -16,10 +17,26 @@ const {
 
 run();
 
+async function cleanTemp() {
+    rimraf('./temp', function () {
+        if (!fs.existsSync('./temp')) {
+            fs.mkdirSync('./temp', {
+                recursive: true
+            });
+            fs.mkdirSync('./temp/ext', {
+                recursive: true
+            });
+            fs.mkdirSync('./temp/opt', {
+                recursive: true
+            });
+        }
+    });
+    console.log("Pasta Temp limpa com sucesso!")
+}
+
 async function run() {
-    if (!fs.existsSync("./temp")) {
-        fs.mkdirSync("./temp");
-    }
+
+    await cleanTemp();
 
     if (!fs.existsSync("./tools/ffmpeg/ffmpeg.exe")) {
         console.log("ffmpeg.exe not detected");
@@ -56,7 +73,7 @@ async function run() {
     }
 
     venom
-        .create({ autoClose: 6000 })
+        .create({ debug: false, folderNameToken: 'tokens', disableWelcome: true, autoClose: 6000 })
         .then((client) => start(client))
         .catch((erro) => {
             console.log(erro);
@@ -119,18 +136,24 @@ async function genSticker(client, message) {
             .toFormat('png')
             .toFile(file)
             .then(info => {
-                console.log(info)
+                console.log('Foto Convertida e comprimida com sucesso')
             })
             .catch(err => {
                 console.log(err)
             });
 
-        client
+        await client.reply(
+            message.chatId,
+            "⚙️ *Aguarde um momento seu sticker está sendo criado* ⚙️",
+            message.id.toString()
+        );
+
+        await client
             .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
         await client
             .sendImageAsSticker(message.from, file)
             .then((result) => {
-                console.log('Result: ', result);
+                console.log('Mensagem enviada para: ', result.to.formattedName);
             })
             .catch((erro) => {
                 console.error('Error when sending: ', erro);
@@ -161,7 +184,7 @@ async function genSticker(client, message) {
                     reject(err);
                 })
                 .on('end', () => {
-                    console.log('[ffmpeg] finished');
+                    console.log('Redimensionamento feito com sucesso!');
                     resolve();
                 });
         });
@@ -205,17 +228,22 @@ async function genSticker(client, message) {
                 return;
             }
 
-            console.log('Sucefully processed file');
+            console.log('Gif processado com sucesso');
             if (statistic.size_output <= 10000000) {
 
+                await client.reply(
+                    message.chatId,
+                    "⚙️ *Aguarde um momento seu sticker está sendo criado* ⚙️",
+                    message.id.toString()
+                );
 
-                client
+                await client
                     .sendText(message.from, '_*Não nos Responsabilizamos pelos Stickers criados*_')
 
                 await client
                     .sendImageAsStickerGif(message.from, statistic.path_out_new)
                     .then((result) => {
-                        console.log('Mensagem enviada para: ', result.to.pushname);
+                        console.log('Mensagem enviada para: ', result.to.formattedName);
                     })
                     .catch((erro) => {
                         console.error('Error ao enviar a mensagem: ', erro);
@@ -223,9 +251,9 @@ async function genSticker(client, message) {
 
                 await client.sendSeen(message.from);
 
-            }else{
-                client
-                .sendText(message.from, '_*O Gif indicado nao pode ser convertido, por ser muito grande*_')
+            } else {
+                await client
+                    .sendText(message.from, '_*O Gif indicado nao pode ser convertido, por ser muito grande*_')
             }
         });
         await glob.Glob(`./temp/*${id}*`, async function (er, files) {
@@ -244,7 +272,7 @@ async function genSticker(client, message) {
             });
         });
     } else {
-        client
+        await client
             .sendText(message.from, '*Envie-me uma imagem ou gif de ate 15 segundos, para receber de volta em forma de figurinha*')
     }
 }
