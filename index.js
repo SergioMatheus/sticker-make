@@ -43,6 +43,10 @@ async function run() {
 
 async function start(client) {
     client.onMessage(async(message) => {
+        const length = fs.readdirSync('./temp').length
+        if (length > 10) {
+            await cleanTemp();
+        }
         if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
             await genSticker(client, message);
         } else if (!message.isGroupMsg) {
