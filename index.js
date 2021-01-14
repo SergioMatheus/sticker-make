@@ -1,12 +1,7 @@
 const venom = require('venom-bot');
 const fs = require('fs');
-const glob = require("glob");
-const Axios = require('axios');
-const ProgressBar = require('progress');
-const Zip = require('node-7z');
 const mime = require('mime-types');
 const crypto = require("crypto");
-const Jimp = require("jimp");
 const sharp = require("sharp");
 var ffmpegStatic = require('ffmpeg-static');
 var rimraf = require("rimraf");
@@ -192,6 +187,6 @@ async function genSticker(client, message) {
         });
     } else {
         await client
-            .sendText(message.from, '*Envie-me uma imagem ou gif de ate 15 segundos, para receber de volta em forma de figurinha*')
+            .sendText(message.from, '*Envie-me no chat privado ou marque no grupo com uma imagem ou gif de ate 15 segundos, para receber de volta em forma de figurinha*')
     }
 }
