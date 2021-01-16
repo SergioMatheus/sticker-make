@@ -13,7 +13,7 @@ const {
 run();
 
 async function cleanTemp() {
-    rimraf('./temp', function() {
+    rimraf('./temp', function () {
         if (!fs.existsSync('./temp')) {
             fs.mkdirSync('./temp', {
                 recursive: true
@@ -42,7 +42,7 @@ async function run() {
 }
 
 async function start(client) {
-    client.onMessage(async(message) => {
+    client.onMessage(async (message) => {
         const length = fs.readdirSync('./temp').length
         if (length > 10) {
             await cleanTemp();
@@ -122,27 +122,16 @@ async function genSticker(client, message) {
                 });
         });
 
-        const compressGif = async(onProgress) => {
+        const compressGif = async (onProgress) => {
+
             const result = await compress({
-                source: `./temp/${id}mod.gif`,
+                source: `./temp/opt/${id}mod.gif`,
                 destination: `./temp/opt/`,
                 onProgress,
                 enginesSetup: {
-                    jpg: {
-                        engine: "mozjpeg",
-                        command: ["-quality", "60"]
-                    },
-                    png: {
-                        engine: "pngquant",
-                        command: ["--quality=20-50", "-o"]
-                    },
-                    svg: {
-                        engine: "svgo",
-                        command: "--multipass"
-                    },
                     gif: {
                         engine: 'gif2webp',
-                        command: ['-f', '80', '-mixed', '-q', '30', '-m', '2']
+                        command: ['-f', '50', '-mixed', '-q', '30', '-m', '2']
                     },
 
                 }
@@ -154,7 +143,7 @@ async function genSticker(client, message) {
             } = result;
         };
 
-        await compressGif(async(error, statistic, completed) => {
+        await compressGif(async (error, statistic, completed) => {
             if (error) {
                 console.log('Error happen while processing file');
                 console.log(error);
@@ -162,7 +151,7 @@ async function genSticker(client, message) {
             }
 
             console.log('Gif processado com sucesso');
-            if (statistic.size_output <= 900000) {
+            if (statistic.size_output && statistic.size_output <= 900000) {
 
                 await client.reply(
                     message.chatId,

@@ -20,8 +20,8 @@
         "node-7z": "^2.1.2",
         "pngquant-bin": "^6.0.0",
         "progress": "^2.0.3",
+        "rimraf": "^3.0.2",
         "sharp": "^0.26.2",
-        "venom-bot": "^2.2.3",
-        "rimraf": "^3.0.2"
+        "venom-bot": "^2.2.3"
     }
 }
