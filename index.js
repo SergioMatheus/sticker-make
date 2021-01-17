@@ -125,7 +125,7 @@ async function genSticker(client, message) {
         const compressGif = async (onProgress) => {
 
             const result = await compress({
-                source: `./temp/opt/${id}mod.gif`,
+                source: `./temp/${id}mod.gif`,
                 destination: `./temp/opt/`,
                 onProgress,
                 enginesSetup: {
