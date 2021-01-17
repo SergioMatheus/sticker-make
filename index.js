@@ -123,23 +123,12 @@ async function genSticker(client, message) {
         });
 
         const compressGif = async(onProgress) => {
+
             const result = await compress({
                 source: `./temp/${id}mod.gif`,
                 destination: `./temp/opt/`,
                 onProgress,
                 enginesSetup: {
-                    jpg: {
-                        engine: "mozjpeg",
-                        command: ["-quality", "60"]
-                    },
-                    png: {
-                        engine: "pngquant",
-                        command: ["--quality=20-50", "-o"]
-                    },
-                    svg: {
-                        engine: "svgo",
-                        command: "--multipass"
-                    },
                     gif: {
                         engine: "gifsicle",
                         command: ["--colors", "64", "--use-col=web"]
@@ -162,7 +151,7 @@ async function genSticker(client, message) {
             }
 
             console.log('Gif processado com sucesso');
-            if (statistic.size_output <= 900000) {
+            if (statistic && statistic.size_output && statistic.size_output <= 900000) {
 
                 await client.reply(
                     message.chatId,
