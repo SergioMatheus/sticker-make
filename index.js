@@ -141,8 +141,8 @@ async function genSticker(client, message) {
                         command: "--multipass"
                     },
                     gif: {
-                        engine: 'gif2webp',
-                        command: ['-f', '80', '-mixed', '-q', '30', '-m', '2']
+                        engine: "gifsicle",
+                        command: ["--colors", "64", "--use-col=web"]
                     },
 
                 }
