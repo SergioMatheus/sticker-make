@@ -13,12 +13,15 @@ const {
 run();
 
 async function cleanTemp() {
-    rimraf('./temp', function() {
+    rimraf('./temp', function () {
         if (!fs.existsSync('./temp')) {
             fs.mkdirSync('./temp', {
                 recursive: true
             });
             fs.mkdirSync('./temp/ext', {
+                recursive: true
+            });
+            fs.mkdirSync('./temp/ozt', {
                 recursive: true
             });
             fs.mkdirSync('./temp/opt', {
@@ -42,7 +45,7 @@ async function run() {
 }
 
 async function start(client) {
-    client.onMessage(async(message) => {
+    client.onMessage(async (message) => {
         const length = fs.readdirSync('./temp').length
         if (length > 10) {
             await cleanTemp();
@@ -122,16 +125,50 @@ async function genSticker(client, message) {
                 });
         });
 
-        const compressGif = async(onProgress) => {
+        const compressGifLossy = async (onProgress) => {
 
-            const result = await compress({
+            await compress({
                 source: `./temp/${id}mod.gif`,
-                destination: `./temp/opt/`,
+                destination: `./temp/ext/`,
+                onProgress,
+                enginesSetup: {
+                    gif: {
+                        engine: "giflossy",
+                        command: ['--lossy=100']
+                    },
+
+                }
+            });
+        };
+
+        const compressGifSicle = async (onProgress) => {
+
+            await compress({
+                source: `./temp/ext/${id}mod.gif`,
+                destination: `./temp/ozt/`,
                 onProgress,
                 enginesSetup: {
                     gif: {
                         engine: "gifsicle",
-                        command: ["--colors", "64", "--use-col=web"]
+                        command: ["--optimize"]
+                    },
+
+                }
+            });
+
+        };
+
+        const compressGifAgain = async (onProgress) => {
+
+            const result = await compress({
+                source: `./temp/ozt/${id}mod.gif`,
+                destination: `./temp/opt/`,
+                compress_force: true, statistic: true, autoupdate: true,
+                onProgress,
+                enginesSetup: {
+                    gif: {
+                        engine: "gif2webp",
+                        command: ['-f', '80', '-mixed', '-q', '30', '-m', '2']
                     },
 
                 }
@@ -143,43 +180,54 @@ async function genSticker(client, message) {
             } = result;
         };
 
-        await compressGif(async(error, statistic, completed) => {
-            if (error) {
-                console.log('Error happen while processing file');
-                console.log(error);
-                return;
-            }
+        await compressGifLossy(async () => {
+            await compressGifSicle(async () => {
+                await compressGifAgain(async (error, statistic, completed) => {
 
-            console.log('Gif processado com sucesso');
-            if (statistic && statistic.size_output && statistic.size_output <= 900000) {
+                    if (error) {
+                        console.log('Error happen while processing file');
+                        console.log(error);
+                        return;
+                    }
 
-                await client.reply(
-                    message.chatId,
-                    "⚙️ *Aguarde um momento seu sticker está sendo criado* ⚙️",
-                    message.id.toString()
-                );
+                    console.log('Gif processado com sucesso');
+                    if (statistic && statistic.size_output && statistic.size_output <= 900000) {
 
-                await client
-                    .sendText(message.from, '_*Não nos Responsabilizamos pelos Stickers criados*_')
+                        await client.reply(
+                            message.chatId,
+                            "⚙️ *Aguarde um momento seu sticker está sendo criado* ⚙️",
+                            message.id.toString()
+                        );
 
-                await client
-                    .sendImageAsStickerGif(message.from, statistic.path_out_new)
-                    .then((result) => {
-                        console.log('Mensagem enviada para: ', result.to.formattedName);
-                    })
-                    .catch((erro) => {
-                        console.error('Error ao enviar a mensagem: ', erro);
-                    });
+                        await client
+                            .sendText(message.from, '_*Não nos Responsabilizamos pelos Stickers criados*_')
 
-                await client.sendSeen(message.from);
+                        await client
+                            .sendImageAsStickerGif(message.from, statistic.path_out_new)
+                            .then((result) => {
+                                console.log('Mensagem enviada para: ', result.to.formattedName);
+                            })
+                            .catch((erro) => {
+                                console.error('Error ao enviar a mensagem: ', erro);
+                            });
 
-            } else {
-                await client
-                    .sendText(message.from, '_*O Gif indicado nao pode ser convertido, por ser muito grande*_')
-            }
+                        await client.sendSeen(message.from);
+
+                    } else {
+                        await client
+                            .sendText(message.from, '_*O Gif indicado nao pode ser convertido, por ser muito grande*_')
+                    }
+                });
+            });
         });
     } else {
         await client
             .sendText(message.from, '*Envie-me no chat privado ou marque no grupo com uma imagem ou gif de ate 15 segundos, para receber de volta em forma de figurinha*')
+    }
+
+    function sleep(ms) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, ms);
+        });
     }
 }
