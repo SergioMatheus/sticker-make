@@ -181,7 +181,7 @@ async function genSticker(client, message) {
         };
 
         await compressGifLossy(async () => {
-            await compressGifSicle(async () => {
+            // await compressGifSicle(async () => {
                 await compressGifAgain(async (error, statistic, completed) => {
 
                     if (error) {
@@ -218,7 +218,7 @@ async function genSticker(client, message) {
                             .sendText(message.from, '_*O Gif indicado nao pode ser convertido, por ser muito grande*_')
                     }
                 });
-            });
+            // });
         });
     } else {
         await client
