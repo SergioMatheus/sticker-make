@@ -47,13 +47,19 @@ async function run() {
 async function start(client) {
     client.onMessage(async (message) => {
         await client.sendSeen(message.from);
-        console.log(message.from);
-        console.log(message);
         const length = fs.readdirSync('./temp').length
         if (length > 10) {
             await cleanTemp();
         }
-        if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
+        if (message.from == '557185189322@c.us' && (message.body.includes('bloquear') || message.body.includes('Bloquear'))) {
+            let menssagem = '';
+            menssagem = message.body.split(" ");
+            await client.blockContact(menssagem[1] + '@c.us');
+            await client
+                .sendText(message.from, `_*O Usuário ${menssagem[1]}, foi bloqueado com sucesso*_`)
+            return true;
+        }
+        else if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
             await genSticker(client, message);
         } else if (!message.isGroupMsg) {
             await genSticker(client, message);
@@ -194,7 +200,7 @@ async function genSticker(client, message) {
                     }
 
                     console.log('Gif processado com sucesso');
-                    if (statistic && statistic.size_output && statistic.size_output <= 900000) {
+                    if (statistic && statistic.size_output && statistic.size_output <= 950000) {
 
                         await client.reply(
                             message.chatId,
@@ -216,7 +222,7 @@ async function genSticker(client, message) {
 
                     } else {
                         await client
-                            .sendText(message.from, '_*O Gif indicado nao pode ser convertido, por ser muito grande*_')
+                            .sendText(message.from, '_*O Gif indicado nao pode ser convertido, por ser muito grande, para que este seja convertido tente comprimir*_')
                     }
                 });
             });
