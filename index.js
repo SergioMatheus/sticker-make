@@ -46,6 +46,9 @@ async function run() {
 
 async function start(client) {
     client.onMessage(async (message) => {
+        await client.sendSeen(message.from);
+        console.log(message.from);
+        console.log(message);
         const length = fs.readdirSync('./temp').length
         if (length > 10) {
             await cleanTemp();
@@ -95,7 +98,7 @@ async function genSticker(client, message) {
                 console.error('Error when sending: ', erro);
             });
 
-        await client.sendSeen(message.from);
+        // await client.sendSeen(message.from);
         // await fs.unlinkSync(file);
     } else if (message.type === "video") {
         const decryptFile = await client.decryptFile(message);
@@ -210,8 +213,6 @@ async function genSticker(client, message) {
                             .catch((erro) => {
                                 console.error('Error ao enviar a mensagem: ', erro);
                             });
-
-                        await client.sendSeen(message.from);
 
                     } else {
                         await client
