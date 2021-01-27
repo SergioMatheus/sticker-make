@@ -90,8 +90,15 @@ async function start(client) {
             .sendText(message, '*O Deploy estava sendo feito, tente novamente agora.*')
         await client.sendSeen(message);
     });
+    
+    client.onAddedToGroup(chatEvent => {
+        await client
+            .sendText(message.from, '*Obrigado por me adicionar ao seu grupo, marque-me em uma foto ou em um gif ou video curto de ate 15 segundos para que eu responda como sticker. OBS: a mensagem precisa conter a minha marcação nao vale responder me marcando.*')
+    });
+
     client.onMessage(async (message) => {
         await client.sendSeen(message.from);
+
         const length = fs.readdirSync('./temp').length
         if (length > 20) {
             await cleanTemp();
@@ -222,7 +229,9 @@ async function genSticker(client, message) {
             const result = await compress({
                 source: `./temp/ozt/${id}mod.gif`,
                 destination: `./temp/opt/`,
-                compress_force: true, statistic: true, autoupdate: true,
+                compress_force: true,
+                statistic: true,
+                autoupdate: true,
                 onProgress,
                 enginesSetup: {
                     gif: {
