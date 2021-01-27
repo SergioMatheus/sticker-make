@@ -32,6 +32,16 @@ async function cleanTemp() {
     console.log("Pasta Temp limpa com sucesso!")
 }
 
+function toUniqueArray(a) {
+    var newArr = [];
+    for (var i = 0; i < a.length; i++) {
+        if (newArr.indexOf(a[i]) === -1) {
+            newArr.push(a[i]);
+        }
+    }
+    return newArr;
+}
+
 async function run() {
 
     await cleanTemp();
@@ -55,10 +65,25 @@ async function start(client) {
     //         console.log(caount.length);
     //     }
     // });
+
+    const messages = await client.getAllUnreadMessages();
+    let idMensagens = [];
+    messages.forEach(async message => {
+        if (message.mentionedJidList.length > 0) {
+            idMensagens.push(message.id.remote);
+        }
+    })
+    let idMensagensUnique = toUniqueArray(idMensagens);
+    idMensagensUnique.forEach(async message => {
+        console.log(message);
+        await client
+            .sendText(message, '*Error ao criar o sticker tente novamente*')
+        await client.sendSeen(message);
+    });
     client.onMessage(async (message) => {
         await client.sendSeen(message.from);
         const length = fs.readdirSync('./temp').length
-        if (length > 10) {
+        if (length > 20) {
             await cleanTemp();
         }
         if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
@@ -97,6 +122,20 @@ async function genSticker(client, message) {
 
         await client
             .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
+
+        // await client
+        //     .sendLinkPreview(
+        //         '000000000000@c.us',
+        //         'https://www.youtube.com/watch?v=V1bFr2SWP1I',
+        //         'Discord Sticker Maker'
+        //     )
+        //     .then((result) => {
+        //         console.log('Result: ', result); //return object success
+        //     })
+        //     .catch((erro) => {
+        //         console.error('Error when sending: ', erro); //return object error
+        //     });
+
         await client
             .sendImageAsSticker(message.from, file)
             .then((result) => {
@@ -125,7 +164,7 @@ async function genSticker(client, message) {
                 .complexFilter(complexFilter)
                 .setFfmpegPath(ffmpegStatic)
                 .setStartTime('00:00:00')
-                .setDuration('15')
+                .setDuration('12')
                 .toFormat('gif')
                 .save(`./temp/${id}mod.gif`)
                 .on('error', async (err) => {
