@@ -29,6 +29,16 @@ async function cleanTemp() {
             });
         }
     });
+    rimraf('./log', function () {
+        if (!fs.existsSync('./log')) {
+            fs.mkdirSync('./log', {
+                recursive: true
+            });
+            fs.mkdirSync('./log/compress-images', {
+                recursive: true
+            });
+        }
+    });
     console.log("Pasta Temp limpa com sucesso!")
 }
 
