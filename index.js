@@ -13,7 +13,7 @@ const {
 run();
 
 async function cleanTemp() {
-    rimraf('./temp', function () {
+    rimraf('./temp', function() {
         if (!fs.existsSync('./temp')) {
             fs.mkdirSync('./temp', {
                 recursive: true
@@ -55,8 +55,14 @@ async function start(client) {
     //         console.log(caount.length);
     //     }
     // });
-    client.onMessage(async (message) => {
+    client.onAddedToGroup(chatEvent => {
+        await client
+            .sendText(message.from, '*Obrigado por me adicionar ao seu grupo, marque-me em uma foto ou em um gif ou video curto de ate 15 segundos para que eu responda como sticker. OBS: a mensagem precisa conter a minha marcação nao vale responder me marcando.*')
+    });
+
+    client.onMessage(async(message) => {
         await client.sendSeen(message.from);
+
         const length = fs.readdirSync('./temp').length
         if (length > 10) {
             await cleanTemp();
@@ -128,7 +134,7 @@ async function genSticker(client, message) {
                 .setDuration('15')
                 .toFormat('gif')
                 .save(`./temp/${id}mod.gif`)
-                .on('error', async (err) => {
+                .on('error', async(err) => {
                     console.log(`[ffmpeg] error: ${err.message}`);
                     await client
                         .sendText(message.from, '*Error ao criar o sticker tente novamente*')
@@ -140,7 +146,7 @@ async function genSticker(client, message) {
                 });
         });
 
-        const compressGifLossy = async (onProgress) => {
+        const compressGifLossy = async(onProgress) => {
 
             await compress({
                 source: `./temp/${id}mod.gif`,
@@ -156,7 +162,7 @@ async function genSticker(client, message) {
             });
         };
 
-        const compressGifSicle = async (onProgress) => {
+        const compressGifSicle = async(onProgress) => {
 
             await compress({
                 source: `./temp/ext/${id}mod.gif`,
@@ -173,12 +179,14 @@ async function genSticker(client, message) {
 
         };
 
-        const compressGifAgain = async (onProgress) => {
+        const compressGifAgain = async(onProgress) => {
 
             const result = await compress({
                 source: `./temp/ozt/${id}mod.gif`,
                 destination: `./temp/opt/`,
-                compress_force: true, statistic: true, autoupdate: true,
+                compress_force: true,
+                statistic: true,
+                autoupdate: true,
                 onProgress,
                 enginesSetup: {
                     gif: {
@@ -195,9 +203,9 @@ async function genSticker(client, message) {
             } = result;
         };
 
-        await compressGifLossy(async () => {
-            await compressGifSicle(async () => {
-                await compressGifAgain(async (error, statistic, completed) => {
+        await compressGifLossy(async() => {
+            await compressGifSicle(async() => {
+                await compressGifAgain(async(error, statistic, completed) => {
 
                     if (error) {
                         console.log('Error happen while processing file');
