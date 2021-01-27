@@ -133,18 +133,13 @@ async function genSticker(client, message) {
         await client
             .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
 
-        // await client
-        //     .sendLinkPreview(
-        //         '000000000000@c.us',
-        //         'https://www.youtube.com/watch?v=V1bFr2SWP1I',
-        //         'Discord Sticker Maker'
-        //     )
-        //     .then((result) => {
-        //         console.log('Result: ', result); //return object success
-        //     })
-        //     .catch((erro) => {
-        //         console.error('Error when sending: ', erro); //return object error
-        //     });
+        await client
+            .sendLinkPreview(
+                message.from,
+                'https://discord.gg/XrXurhVxRw',
+                '*Junte-se ao Discord do Sticker Maker, para poder enviar suas sugestôes e reportar problemas*'
+            );
+
 
         await client
             .sendImageAsSticker(message.from, file)
@@ -265,6 +260,13 @@ async function genSticker(client, message) {
 
                         await client
                             .sendText(message.from, '_*Não nos Responsabilizamos pelos Stickers criados*_')
+
+                        await client
+                            .sendLinkPreview(
+                                message.from,
+                                'https://discord.gg/XrXurhVxRw',
+                                'Discord Sticker Maker'
+                            );
 
                         await client
                             .sendImageAsStickerGif(message.from, statistic.path_out_new)
