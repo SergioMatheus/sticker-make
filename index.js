@@ -45,21 +45,23 @@ async function run() {
 }
 
 async function start(client) {
+    // const chats = await client.getAllGroups();
+    // console.log(chats.length);
+    // let caount = 0;
+    // chats.forEach(async element => {
+    //     caount = await client.getGroupMembers(element.id._serialized);
+    //     if (caount.length > 20) {
+    //         console.log(element.name)
+    //         console.log(caount.length);
+    //     }
+    // });
     client.onMessage(async (message) => {
         await client.sendSeen(message.from);
         const length = fs.readdirSync('./temp').length
         if (length > 10) {
             await cleanTemp();
         }
-        if (message.from == '557185189322@c.us' && (message.body.includes('bloquear') || message.body.includes('Bloquear'))) {
-            let menssagem = '';
-            menssagem = message.body.split(" ");
-            await client.blockContact(menssagem[1] + '@c.us');
-            await client
-                .sendText(message.from, `_*O Usuário ${menssagem[1]}, foi bloqueado com sucesso*_`)
-            return true;
-        }
-        else if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
+        if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
             await genSticker(client, message);
         } else if (!message.isGroupMsg) {
             await genSticker(client, message);
@@ -110,7 +112,7 @@ async function genSticker(client, message) {
         const decryptFile = await client.decryptFile(message);
         const file = `${id}.${mime.extension(message.mimetype)}`;
 
-        await fs.writeFile(`./temp/${file}`, decryptFile, (err) => {
+        await fs.writeFile(`./temp/${file}`, decryptFile, 'base64', (err) => {
             if (err) {
                 console.log(err)
             }
@@ -122,10 +124,14 @@ async function genSticker(client, message) {
             ffmpeg(`./temp/${file}`)
                 .complexFilter(complexFilter)
                 .setFfmpegPath(ffmpegStatic)
+                .setStartTime('00:00:00')
+                .setDuration('15')
                 .toFormat('gif')
                 .save(`./temp/${id}mod.gif`)
-                .on('error', (err) => {
+                .on('error', async (err) => {
                     console.log(`[ffmpeg] error: ${err.message}`);
+                    await client
+                        .sendText(message.from, '*Error ao criar o sticker tente novamente*')
                     reject(err);
                 })
                 .on('end', () => {
