@@ -87,7 +87,7 @@ async function start(client) {
     idMensagensUnique.forEach(async message => {
         console.log(message);
         await client
-            .sendText(message, '*Error ao criar o sticker tente novamente*')
+            .sendText(message, '*O Deploy estava sendo feito, tente novamente agora.*')
         await client.sendSeen(message);
     });
     client.onMessage(async (message) => {
