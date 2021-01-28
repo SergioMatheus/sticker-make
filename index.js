@@ -81,19 +81,14 @@ async function start(client) {
     messages.forEach(async message => {
         if (message.mentionedJidList.length > 0) {
             idMensagens.push(message.id.remote);
+            await client.sendSeen(message.id.remote);
         }
     })
     let idMensagensUnique = toUniqueArray(idMensagens);
     idMensagensUnique.forEach(async message => {
         console.log(message);
         await client
-            .sendText(message, '*O Deploy estava sendo feito, tente novamente agora.*')
-        await client.sendSeen(message);
-    });
-    
-    client.onAddedToGroup(chatEvent => {
-        await client
-            .sendText(message.from, '*Obrigado por me adicionar ao seu grupo, marque-me em uma foto ou em um gif ou video curto de ate 15 segundos para que eu responda como sticker. OBS: a mensagem precisa conter a minha marcação nao vale responder me marcando.*')
+            .sendText(message, '*Tava ocupado fazendo Deploy, tente denovo essa porra ai.*')
     });
 
     client.onMessage(async (message) => {
@@ -106,6 +101,12 @@ async function start(client) {
         if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
             await genSticker(client, message);
         } else if (!message.isGroupMsg) {
+            await client
+                .sendLinkPreview(
+                    message.from,
+                    'https://discord.gg/XrXurhVxRw',
+                    '*Junte-se ao Discord do Sticker Maker, para poder enviar suas sugestôes e reportar problemas*'
+                );
             await genSticker(client, message);
         }
     });
@@ -133,20 +134,12 @@ async function genSticker(client, message) {
 
         await client.reply(
             message.chatId,
-            "⚙️ *Aguarde um momento seu sticker está sendo criado* ⚙️",
+            "💀 *Vou ver e te aviso* 💀",
             message.id.toString()
         );
 
         await client
             .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
-
-        await client
-            .sendLinkPreview(
-                message.from,
-                'https://discord.gg/XrXurhVxRw',
-                '*Junte-se ao Discord do Sticker Maker, para poder enviar suas sugestôes e reportar problemas*'
-            );
-
 
         await client
             .sendImageAsSticker(message.from, file)
@@ -163,7 +156,7 @@ async function genSticker(client, message) {
         const decryptFile = await client.decryptFile(message);
         const file = `${id}.${mime.extension(message.mimetype)}`;
 
-        await fs.writeFile(`./temp/${file}`, decryptFile, 'base64', (err) => {
+        await fs.writeFile(`./temp/${file}`, decryptFile, 'binary', (err) => {
             if (err) {
                 console.log(err)
             }
@@ -263,19 +256,12 @@ async function genSticker(client, message) {
 
                         await client.reply(
                             message.chatId,
-                            "⚙️ *Aguarde um momento seu sticker está sendo criado* ⚙️",
+                            "💀 *Vou ver e te aviso* 💀",
                             message.id.toString()
                         );
 
                         await client
                             .sendText(message.from, '_*Não nos Responsabilizamos pelos Stickers criados*_')
-
-                        await client
-                            .sendLinkPreview(
-                                message.from,
-                                'https://discord.gg/XrXurhVxRw',
-                                'Discord Sticker Maker'
-                            );
 
                         await client
                             .sendImageAsStickerGif(message.from, statistic.path_out_new)
