@@ -100,7 +100,7 @@ async function start(client) {
         }
         if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
             await client
-                .sendText(message, '*Para mais informações sobre o criador, tente criar um sticker no privado.*')
+                .sendText(message.from, '*Para mais informações sobre os criadores, tente criar um sticker no privado.*')
             await genSticker(client, message);
         } else if (!message.isGroupMsg) {
             await client
