@@ -57,7 +57,7 @@ async function run() {
     await cleanTemp();
 
     venom
-        .create({ debug: false, folderNameToken: 'tokens', disableWelcome: true, autoClose: 6000 })
+        .create({ debug: false, folderNameToken: 'tokens', disableWelcome: true, autoClose: 4000 })
         .then((client) => start(client))
         .catch((erro) => {
             console.log(erro);
@@ -81,8 +81,8 @@ async function start(client) {
     messages.forEach(async message => {
         if (message.mentionedJidList.length > 0) {
             idMensagens.push(message.id.remote);
-            await client.sendSeen(message.id.remote);
         }
+        await client.sendSeen(message.id.remote);
     })
     let idMensagensUnique = toUniqueArray(idMensagens);
     idMensagensUnique.forEach(async message => {
@@ -118,21 +118,7 @@ async function genSticker(client, message) {
     const id = crypto.randomBytes(16).toString("hex");
     if (message.type === "image") {
         const decryptFile = await client.decryptFile(message);
-        const file = `./temp/${id}.png`;
-
-        await sharp(decryptFile)
-            .resize(512, 512, {
-                fit: sharp.fit.contain,
-                background: { r: 0, g: 0, b: 0, alpha: 0 }
-            })
-            .toFormat('png')
-            .toFile(file)
-            .then(info => {
-                console.log('Foto Convertida e comprimida com sucesso')
-            })
-            .catch(err => {
-                console.log(err)
-            });
+        const file = `./temp/${id}.webp`;
 
         await client.reply(
             message.chatId,
@@ -140,20 +126,78 @@ async function genSticker(client, message) {
             message.id.toString()
         );
 
-        await client
-            .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
+        if (!message.from.includes('85189322')) {
+            await sharp(decryptFile)
+                .resize(512, 512, {
+                    fit: sharp.fit.contain,
+                    background: { r: 0, g: 0, b: 0, alpha: 0 }
+                })
+                .png()
+                .toFile(file)
+                .then(async info => {
+                    console.log('Foto Convertida e comprimida com sucesso')
 
-        await client
-            .sendImageAsSticker(message.from, file)
-            .then((result) => {
-                console.log('Mensagem enviada para: ', result.to.formattedName);
-            })
-            .catch((erro) => {
-                console.error('Error when sending: ', erro);
-            });
+                    await client
+                        .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
 
-        // await client.sendSeen(message.from);
-        // await fs.unlinkSync(file);
+                    await client
+                        .sendImageAsSticker(message.from, file)
+                        .then((result) => {
+                            console.log('Mensagem enviada para: ', result.to.formattedName);
+                        })
+                        .catch((erro) => {
+                            console.error('Error when sending: ', erro);
+                        });
+
+                })
+                .catch(async err => {
+                    await client.reply(
+                        message.chatId,
+                        "💀 *Já vi, porém não posso te contar, tente denovo quem sabe na próxima* 💀",
+                        message.id.toString()
+                    );
+                });
+        } else {
+            const width = 460,
+                r = width / 2,
+                circleShape = Buffer.from(`<svg><circle cx="${r}" cy="${r}" r="${r}" /></svg>`);
+            await sharp(decryptFile)
+                .resize(512, 512, {
+                    fit: sharp.fit.contain,
+                    background: { r: 0, g: 0, b: 0, alpha: 0 }
+                })
+                .composite([{
+                    input: circleShape,
+                    blend: 'dest-in'
+                }])
+                .png()
+                .toFile(file)
+                .then(async info => {
+                    console.log('Foto Convertida e comprimida com sucesso')
+
+                    await client
+                        .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
+
+                    await client
+                        .sendImageAsSticker(message.from, file)
+                        .then((result) => {
+                            console.log('Mensagem enviada para: ', result.to.formattedName);
+                        })
+                        .catch((erro) => {
+                            console.error('Error when sending: ', erro);
+                        });
+
+                })
+                .catch(async err => {
+                    await client.reply(
+                        message.chatId,
+                        "💀 *Já vi, porém não posso te contar, tente denovo quem sabe na próxima* 💀",
+                        message.id.toString()
+                    );
+                });
+        }
+
+
     } else if (message.type === "video") {
         const decryptFile = await client.decryptFile(message);
         const file = `${id}.${mime.extension(message.mimetype)}`;
@@ -177,7 +221,7 @@ async function genSticker(client, message) {
                 .on('error', async (err) => {
                     console.log(`[ffmpeg] error: ${err.message}`);
                     await client
-                        .sendText(message.from, '*Error ao criar o sticker tente novamente*')
+                        .sendText(message.from, '*Deu problema aqui no código, tente denovo ou fique sem seu sticker #EscolhaComSabedoria*')
                     reject(err);
                 })
                 .on('end', () => {
@@ -276,7 +320,7 @@ async function genSticker(client, message) {
 
                     } else {
                         await client
-                            .sendText(message.from, '_*O Gif indicado nao pode ser convertido, por ser muito grande, para que este seja convertido tente comprimir*_')
+                            .sendText(message.from, '_*Porra meu consagrado(a), seu sticker mesmo comprimindo ainda ficou muito grande, me ajude a te ajudar e diminua ele ai*_')
                     }
                 });
             });
