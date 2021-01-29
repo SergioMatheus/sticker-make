@@ -79,16 +79,18 @@ async function start(client) {
     const messages = await client.getAllUnreadMessages();
     let idMensagens = [];
     messages.forEach(async message => {
-        if (message.mentionedJidList.length > 0) {
+        if ((!message.from.includes('-') && message.type.includes('image')) || (!message.from.includes('-') && message.type.includes('video'))) {
+            idMensagens.push(message.id.remote);
+        }
+        else if (message.mentionedJidList.length > 0) {
             idMensagens.push(message.id.remote);
         }
         await client.sendSeen(message.id.remote);
     })
     let idMensagensUnique = toUniqueArray(idMensagens);
     idMensagensUnique.forEach(async message => {
-        console.log(message);
         await client
-            .sendText(message, '*Tava ocupado fazendo Deploy, tente denovo essa porra ai.*')
+            .sendText(message, '*Tava ocupado, tente denovo essa porra ai.*')
     });
 
     client.onMessage(async (message) => {
@@ -99,16 +101,28 @@ async function start(client) {
             await cleanTemp();
         }
         if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
+            await client.reply(
+                message.chatId,
+                "💀 *Vou ver e te aviso* 💀",
+                message.id.toString()
+            );
             await client
                 .sendText(message.from, '*Para mais informações sobre os criadores, tente criar um sticker no privado.*')
             await genSticker(client, message);
         } else if (!message.isGroupMsg) {
+            await client.reply(
+                message.chatId,
+                "💀 *Vou ver e te aviso* 💀",
+                message.id.toString()
+            );
+
             await client
                 .sendLinkPreview(
                     message.from,
                     'https://discord.gg/XrXurhVxRw',
                     '*Junte-se ao Discord do Sticker Maker, para poder enviar suas sugestôes e reportar problemas*'
                 );
+
             await genSticker(client, message);
         }
     });
@@ -120,51 +134,22 @@ async function genSticker(client, message) {
         const decryptFile = await client.decryptFile(message);
         const file = `./temp/${id}.webp`;
 
-        await client.reply(
-            message.chatId,
-            "💀 *Vou ver e te aviso* 💀",
-            message.id.toString()
-        );
+        if ((message.caption && message.caption.includes('Circular') && message.type.includes('image'))) {
 
-        if (!message.from.includes('85189322')) {
-            await sharp(decryptFile)
-                .resize(512, 512, {
-                    fit: sharp.fit.contain,
-                    background: { r: 0, g: 0, b: 0, alpha: 0 }
-                })
-                .png()
-                .toFile(file)
-                .then(async info => {
-                    console.log('Foto Convertida e comprimida com sucesso')
-
-                    await client
-                        .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
-
-                    await client
-                        .sendImageAsSticker(message.from, file)
-                        .then((result) => {
-                            console.log('Mensagem enviada para: ', result.to.formattedName);
-                        })
-                        .catch((erro) => {
-                            console.error('Error when sending: ', erro);
-                        });
-
-                })
-                .catch(async err => {
-                    await client.reply(
-                        message.chatId,
-                        "💀 *Já vi, porém não posso te contar, tente denovo quem sabe na próxima* 💀",
-                        message.id.toString()
-                    );
-                });
-        } else {
             const width = 460,
                 r = width / 2,
                 circleShape = Buffer.from(`<svg><circle cx="${r}" cy="${r}" r="${r}" /></svg>`);
             await sharp(decryptFile)
-                .resize(512, 512, {
-                    fit: sharp.fit.contain,
-                    background: { r: 0, g: 0, b: 0, alpha: 0 }
+                .resize({
+                    width: 512,
+                    height: 512,
+                    fit: 'contain',
+                    background: {
+                        r: 255,
+                        g: 255,
+                        b: 255,
+                        alpha: 0
+                    }
                 })
                 .composite([{
                     input: circleShape,
@@ -195,6 +180,46 @@ async function genSticker(client, message) {
                         message.id.toString()
                     );
                 });
+        } else {
+            await sharp(decryptFile)
+                .resize({
+                    width: 512,
+                    height: 512,
+                    fit: 'contain',
+                    background: {
+                        r: 255,
+                        g: 255,
+                        b: 255,
+                        alpha: 0
+                    }
+                })
+                .png()
+                .toFile(file)
+                .then(async info => {
+                    console.log('Foto Convertida e comprimida com sucesso')
+
+                    await client
+                        .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
+
+                    await client
+                        .sendImageAsSticker(message.from, file)
+                        .then((result) => {
+                            console.log('Mensagem enviada para: ', result.to.formattedName);
+                        })
+                        .catch((erro) => {
+                            console.error('Error when sending: ', erro);
+                        });
+
+                })
+                .catch(async err => {
+                    await client.reply(
+                        message.chatId,
+                        "💀 *Já vi, porém não posso te contar porque deu erro, tente denovo quem sabe na próxima* 💀",
+                        message.id.toString()
+                    );
+                });
+
+
         }
 
 
@@ -221,7 +246,7 @@ async function genSticker(client, message) {
                 .on('error', async (err) => {
                     console.log(`[ffmpeg] error: ${err.message}`);
                     await client
-                        .sendText(message.from, '*Deu problema aqui no código, tente denovo ou fique sem seu sticker #EscolhaComSabedoria*')
+                        .sendText(message.from, '💀 *Já vi, porém não posso te contar, tente denovo quem sabe na próxima* 💀')
                     reject(err);
                 })
                 .on('end', () => {
@@ -299,12 +324,6 @@ async function genSticker(client, message) {
 
                     console.log('Gif processado com sucesso');
                     if (statistic && statistic.size_output && statistic.size_output <= 950000) {
-
-                        await client.reply(
-                            message.chatId,
-                            "💀 *Vou ver e te aviso* 💀",
-                            message.id.toString()
-                        );
 
                         await client
                             .sendText(message.from, '_*Não nos Responsabilizamos pelos Stickers criados*_')
