@@ -67,13 +67,20 @@ async function run() {
 async function start(client) {
     // const chats = await client.getAllGroups();
     // console.log(chats.length);
-    // let caount = 0;
     // chats.forEach(async element => {
-    //     caount = await client.getGroupMembers(element.id._serialized);
-    //     if (caount.length > 20) {
-    //         console.log(element.name)
-    //         console.log(caount.length);
-    //     }
+
+    //     await client
+    //         .sendText(element.id._serialized, '*ALERTA DE NOVA FUNCIONALIDADE!!!!*' +
+    //             '\n\n_*-Adicionado a funcao de recorte circular do sticker estatico(foto)*_' +
+    //             '\n\n _Para utilizar o sticker em formato redondo basta enviar a imagem com o texto "Circular" no privado,' +
+    //             ' e para os grupos terá q marcar a foto com o numero do bot e colocar a palavra "Circular" ao lado da marcação_')
+
+    //     await client
+    //         .sendLinkPreview(
+    //             element.id._serialized,
+    //             'https://discord.gg/XrXurhVxRw',
+    //             '*As Proximas atualizações somente serão informadas via chat do discord*'
+    //         );
     // });
 
     const messages = await client.getAllUnreadMessages();
@@ -90,11 +97,15 @@ async function start(client) {
     let idMensagensUnique = toUniqueArray(idMensagens);
     idMensagensUnique.forEach(async message => {
         await client
-            .sendText(message, '*Tava ocupado, tente denovo essa porra ai.*')
+            .sendText(message, '*Tava ocupado criando uma nova versão, tente denovo essa porra ai.*')
     });
 
     client.onMessage(async (message) => {
         await client.sendSeen(message.from);
+
+        // if (message.from.includes('85189322')) {
+        //     return true;
+        // }
 
         const length = fs.readdirSync('./temp').length
         if (length > 20) {
@@ -134,7 +145,7 @@ async function genSticker(client, message) {
         const decryptFile = await client.decryptFile(message);
         const file = `./temp/${id}.webp`;
 
-        if ((message.caption && message.caption.includes('Circular') && message.type.includes('image'))) {
+        if ((message.caption && message.caption.toUpperCase().includes('CIRCULAR') && message.type.includes('image'))) {
 
             const width = 460,
                 r = width / 2,
