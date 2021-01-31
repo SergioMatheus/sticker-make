@@ -4,6 +4,7 @@ const mime = require('mime-types');
 const crypto = require("crypto");
 const sharp = require("sharp");
 var ffmpegStatic = require('ffmpeg-static');
+const request = require('request');
 var rimraf = require("rimraf");
 const ffmpeg = require("fluent-ffmpeg");
 const {
@@ -70,10 +71,8 @@ async function start(client) {
     // chats.forEach(async element => {
 
     //     await client
-    //         .sendText(element.id._serialized, '*ALERTA DE NOVA FUNCIONALIDADE!!!!*' +
-    //             '\n\n_*-Adicionado a funcao de recorte circular do sticker estatico(foto)*_' +
-    //             '\n\n _Para utilizar o sticker em formato redondo basta enviar a imagem com o texto "Circular" no privado,' +
-    //             ' e para os grupos terá q marcar a foto com o numero do bot e colocar a palavra "Circular" ao lado da marcação_')
+    //         .sendText(element.id._serialized, '*ALERTA!!!!*' +
+    //             '\n\n_*-Bot novamente online agora com esse novo numero*_')
 
     //     await client
     //         .sendLinkPreview(
@@ -97,13 +96,15 @@ async function start(client) {
     let idMensagensUnique = toUniqueArray(idMensagens);
     idMensagensUnique.forEach(async message => {
         await client
-            .sendText(message, '*Tava ocupado criando uma nova versão, tente denovo essa porra ai.*')
+            .sendText(message, '*Tava off no momento que você mandou a foto, tente novamente.*')
     });
 
     client.onMessage(async (message) => {
         await client.sendSeen(message.from);
 
         // if (message.from.includes('85189322')) {
+        //     await client
+        //         .sendImageAsSticker(message.from, 'https://onlinepngtools.com/images/examples-onlinepngtools/new-york-city-transparent.png')
         //     return true;
         // }
 
@@ -111,7 +112,7 @@ async function start(client) {
         if (length > 20) {
             await cleanTemp();
         }
-        if (message.isGroupMsg && message.mentionedJidList[0] == '14058658204@c.us') {
+        if (message.isGroupMsg && message.mentionedJidList[0] == '14058170633@c.us') {
             await client.reply(
                 message.chatId,
                 "💀 *Vou ver e te aviso* 💀",
@@ -119,6 +120,10 @@ async function start(client) {
             );
             await client
                 .sendText(message.from, '*Para mais informações sobre os criadores, tente criar um sticker no privado.*')
+            await client
+                .sendText(message.from, '*Tá com duvida de como usar o StickerMake? Gostaria de ver as atualizações? utilize nosso catalogo https://wa.me/c/14058170633*')
+            await client
+                .sendText(message.from, '*Gostou do StickerMake? faça uma doação via pix: a37716cc-5449-4ac6-b38d-1f9de7b67b41*')
             await genSticker(client, message);
         } else if (!message.isGroupMsg) {
             await client.reply(
@@ -126,6 +131,11 @@ async function start(client) {
                 "💀 *Vou ver e te aviso* 💀",
                 message.id.toString()
             );
+            await client
+                .sendText(message.from, '*Tá com duvida de como usar o StickerMake? Gostaria de ver as atualizações? utilize nosso catalogo https://wa.me/c/14058170633*')
+
+            await client
+                .sendText(message.from, '*Gostou do StickerMake? faça uma doação via pix: a37716cc-5449-4ac6-b38d-1f9de7b67b41*')
 
             await client
                 .sendLinkPreview(
@@ -141,9 +151,54 @@ async function start(client) {
 
 async function genSticker(client, message) {
     const id = crypto.randomBytes(16).toString("hex");
-    if (message.type === "image") {
+    const file = `./temp/${id}.png`;
+
+    if (message.body.includes('transparente') && message.from.includes('85189322')) {
+
+        let url = message.body.split(/\s+/)[1];
+        // const url = "https://pngimage.net/wp-content/uploads/2018/06/new-york-knicks-logo-png-6.png"
+        request({ url, encoding: null }, function (error, response, body) {
+            if (!error) {
+                sharp(body)
+                    .resize({
+                        width: 512,
+                        height: 512,
+                        fit: 'contain',
+                        background: {
+                            r: 255,
+                            g: 255,
+                            b: 255,
+                            alpha: 0
+                        }
+                    })
+                    .png()
+                    .toFile(file)
+                    .then(async function (data) {
+                        console.log('Foto Convertida e comprimida com sucesso')
+
+                        await client
+                            .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
+
+                        await client
+                            .sendImageAsSticker(message.from, file)
+                            .then((result) => {
+                                console.log('Mensagem enviada para: ', result.to.formattedName);
+                            })
+                            .catch((erro) => {
+                                console.error('Error when sending: ', erro);
+                            });
+                    })
+            } else {
+                (async () => await client.reply(
+                    message.chatId,
+                    "💀 *Já vi, porém não posso te contar porque deu erro, tente denovo que eu tento te contar* 💀",
+                    message.id.toString()
+                ));
+            }
+        })
+    }
+    else if (message.type === "image") {
         const decryptFile = await client.decryptFile(message);
-        const file = `./temp/${id}.webp`;
 
         if ((message.caption && message.caption.toUpperCase().includes('CIRCULAR') && message.type.includes('image'))) {
 
@@ -238,8 +293,10 @@ async function genSticker(client, message) {
         const decryptFile = await client.decryptFile(message);
         const file = `${id}.${mime.extension(message.mimetype)}`;
 
-        await fs.writeFile(`./temp/${file}`, decryptFile, 'binary', (err) => {
+        await fs.writeFile(`./temp/${file}`, decryptFile, 'binary', async (err) => {
             if (err) {
+                await client
+                    .sendText(message.from, '💀 *Já vi, porém não posso te contar, tente denovo quem sabe na próxima* 💀')
                 console.log(err)
             }
         });
@@ -255,9 +312,9 @@ async function genSticker(client, message) {
                 .toFormat('gif')
                 .save(`./temp/${id}mod.gif`)
                 .on('error', async (err) => {
-                    console.log(`[ffmpeg] error: ${err.message}`);
                     await client
                         .sendText(message.from, '💀 *Já vi, porém não posso te contar, tente denovo quem sabe na próxima* 💀')
+                    console.log(`[ffmpeg] error: ${err.message}`);
                     reject(err);
                 })
                 .on('end', () => {
@@ -329,6 +386,8 @@ async function genSticker(client, message) {
 
                     if (error) {
                         console.log('Error happen while processing file');
+                        await client
+                            .sendText(message.from, '💀 *Já vi, porém não posso te contar, tente denovo quem sabe na próxima* 💀')
                         console.log(error);
                         return;
                     }
@@ -344,7 +403,9 @@ async function genSticker(client, message) {
                             .then((result) => {
                                 console.log('Mensagem enviada para: ', result.to.formattedName);
                             })
-                            .catch((erro) => {
+                            .catch(async (erro) => {
+                                await client
+                                    .sendText(message.from, '💀 *Já vi, porém não posso te contar, tente denovo quem sabe na próxima* 💀')
                                 console.error('Error ao enviar a mensagem: ', erro);
                             });
 
