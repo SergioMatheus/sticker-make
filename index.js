@@ -119,8 +119,6 @@ async function start(client) {
                 message.id.toString()
             );
             await client
-                .sendText(message.from, '*Para mais informações sobre os criadores, tente criar um sticker no privado.*')
-            await client
                 .sendText(message.from, '*Tá com duvida de como usar o StickerMake? Gostaria de ver as atualizações? utilize nosso catalogo https://wa.me/c/14058170633*')
             await client
                 .sendText(message.from, '*Gostou do StickerMake? faça uma doação via pix: a37716cc-5449-4ac6-b38d-1f9de7b67b41*')
@@ -177,7 +175,7 @@ async function genSticker(client, message) {
                         console.log('Foto Convertida e comprimida com sucesso')
 
                         await client
-                            .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
+                            .sendText(message.from, '*O StickerMake é de uso gratuito e não temos responsabilidade pelos Stickers criados*')
 
                         await client
                             .sendImageAsSticker(message.from, file)
@@ -191,13 +189,12 @@ async function genSticker(client, message) {
             } else {
                 (async () => await client.reply(
                     message.chatId,
-                    "💀 *Já vi, porém não posso te contar porque deu erro, tente denovo que eu tento te contar* 💀",
+                    "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀",
                     message.id.toString()
                 ));
             }
         })
-    }
-    else if (message.type === "image") {
+    } else if (message.type === "image") {
         const decryptFile = await client.decryptFile(message);
 
         if ((message.caption && message.caption.toUpperCase().includes('CIRCULAR') && message.type.includes('image'))) {
@@ -227,7 +224,7 @@ async function genSticker(client, message) {
                     console.log('Foto Convertida e comprimida com sucesso')
 
                     await client
-                        .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
+                        .sendText(message.from, '*O StickerMake é de uso gratuito e não temos responsabilidade pelos Stickers criados*')
 
                     await client
                         .sendImageAsSticker(message.from, file)
@@ -242,7 +239,7 @@ async function genSticker(client, message) {
                 .catch(async err => {
                     await client.reply(
                         message.chatId,
-                        "💀 *Já vi, porém não posso te contar, tente denovo quem sabe na próxima* 💀",
+                        "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀",
                         message.id.toString()
                     );
                 });
@@ -265,7 +262,7 @@ async function genSticker(client, message) {
                     console.log('Foto Convertida e comprimida com sucesso')
 
                     await client
-                        .sendText(message.from, '*Não nos Responsabilizamos pelos Stickers criados*')
+                        .sendText(message.from, '*O StickerMake é de uso gratuito e não temos responsabilidade pelos Stickers criados*')
 
                     await client
                         .sendImageAsSticker(message.from, file)
@@ -280,7 +277,7 @@ async function genSticker(client, message) {
                 .catch(async err => {
                     await client.reply(
                         message.chatId,
-                        "💀 *Já vi, porém não posso te contar porque deu erro, tente denovo quem sabe na próxima* 💀",
+                        "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀",
                         message.id.toString()
                     );
                 });
@@ -296,7 +293,7 @@ async function genSticker(client, message) {
         await fs.writeFile(`./temp/${file}`, decryptFile, 'binary', async (err) => {
             if (err) {
                 await client
-                    .sendText(message.from, '💀 *Já vi, porém não posso te contar, tente denovo quem sabe na próxima* 💀')
+                    .sendText(message.from, "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀")
                 console.log(err)
             }
         });
@@ -313,7 +310,7 @@ async function genSticker(client, message) {
                 .save(`./temp/${id}mod.gif`)
                 .on('error', async (err) => {
                     await client
-                        .sendText(message.from, '💀 *Já vi, porém não posso te contar, tente denovo quem sabe na próxima* 💀')
+                        .sendText(message.from, "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀")
                     console.log(`[ffmpeg] error: ${err.message}`);
                     reject(err);
                 })
@@ -387,7 +384,7 @@ async function genSticker(client, message) {
                     if (error) {
                         console.log('Error happen while processing file');
                         await client
-                            .sendText(message.from, '💀 *Já vi, porém não posso te contar, tente denovo quem sabe na próxima* 💀')
+                            .sendText(message.from, "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀")
                         console.log(error);
                         return;
                     }
@@ -396,7 +393,7 @@ async function genSticker(client, message) {
                     if (statistic && statistic.size_output && statistic.size_output <= 950000) {
 
                         await client
-                            .sendText(message.from, '_*Não nos Responsabilizamos pelos Stickers criados*_')
+                            .sendText(message.from, '_*O StickerMake é de uso gratuito e não temos responsabilidade pelos Stickers criados*_')
 
                         await client
                             .sendImageAsStickerGif(message.from, statistic.path_out_new)
@@ -405,7 +402,7 @@ async function genSticker(client, message) {
                             })
                             .catch(async (erro) => {
                                 await client
-                                    .sendText(message.from, '💀 *Já vi, porém não posso te contar, tente denovo quem sabe na próxima* 💀')
+                                    .sendText(message.from, "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀")
                                 console.error('Error ao enviar a mensagem: ', erro);
                             });
 
