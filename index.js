@@ -151,9 +151,13 @@ async function genSticker(client, message) {
     const id = crypto.randomBytes(16).toString("hex");
     const file = `./temp/${id}.png`;
 
-    if (message.body.includes('transparente') && message.from.includes('85189322')) {
-
-        let url = message.body.split(/\s+/)[1];
+    if (message.body.toUpperCase().includes('TRANSPARENTE')) {
+        let url;
+        if(message.isGroupMsg){
+            url = message.body.split(/\s+/)[2];
+        }else{
+            url = message.body.split(/\s+/)[1];
+        }
         // const url = "https://pngimage.net/wp-content/uploads/2018/06/new-york-knicks-logo-png-6.png"
         request({ url, encoding: null }, function (error, response, body) {
             if (!error) {
