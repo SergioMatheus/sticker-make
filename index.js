@@ -88,7 +88,7 @@ async function start(client) {
   const messages = await client.getAllUnreadMessages();
   let idMensagens = [];
   messages.forEach(async (message) => {
-    if (message.mentionedJidList.length > 0) {
+    if (message.mentionedJidList.length > 0 && message.mentionedJidList.includes("14058170633@c.us")) {
       idMensagens.push(message.id.remote);
     } else if (
       (!message.from.includes("-") && message.type.includes("image")) ||
@@ -424,38 +424,38 @@ async function makeGif(file, id, client, message) {
 }
 
 async function sendMessagesDefault(client, message) {
-  switch (message.from) {
-    case message.from.includes("557185189322@g.us"):
-      break;
-    case "557188044044-1494204216@g.us":
-      break;
-    case "557193142784-1495902162@g.us":
-      break;
+  // switch (message.from) {
+  //   case message.from.includes("557185189322@g.us"):
+  //     break;
+  //   case "557188044044-1494204216@g.us":
+  //     break;
+  //   case "557193142784-1495902162@g.us":
+  //     break;
 
-    default:
-      await client.reply(
-        message.chatId,
-        "💀 *Vou ver e te aviso* 💀",
-        message.id.toString()
-      );
-      await client.sendText(
-        message.from,
-        "*Tá com duvida de como usar o StickerMake? Gostaria de ver as atualizações? utilize nosso catalogo https://wa.me/c/14058170633*"
-      );
-      await client.sendLinkPreview(
-        message.from,
-        "https://discord.gg/XrXurhVxRw",
-        "*Junte-se ao Discord do Sticker Maker, para poder enviar suas sugestôes e reportar problemas*"
-      );
-      await client.sendText(
-        message.from,
-        "*Gostou do StickerMake? faça uma doação via pix: a37716cc-5449-4ac6-b38d-1f9de7b67b41*"
-      );
+  //   default:
+  //     await client.reply(
+  //       message.chatId,
+  //       "💀 *Vou ver e te aviso* 💀",
+  //       message.id.toString()
+  //     );
+  //     await client.sendText(
+  //       message.from,
+  //       "*Tá com duvida de como usar o StickerMake? Gostaria de ver as atualizações? utilize nosso catalogo https://wa.me/c/14058170633*"
+  //     );
+  //     await client.sendLinkPreview(
+  //       message.from,
+  //       "https://discord.gg/XrXurhVxRw",
+  //       "*Junte-se ao Discord do Sticker Maker, para poder enviar suas sugestôes e reportar problemas*"
+  //     );
+  //     await client.sendText(
+  //       message.from,
+  //       "*Gostou do StickerMake? faça uma doação via pix: a37716cc-5449-4ac6-b38d-1f9de7b67b41*"
+  //     );
 
-      await client.sendText(
-        message.from,
-        "*O StickerMake é de uso gratuito e não temos responsabilidade pelos Stickers criados*"
-      );
-      break;
-  }
+  //     await client.sendText(
+  //       message.from,
+  //       "*O StickerMake é de uso gratuito e não temos responsabilidade pelos Stickers criados*"
+  //     );
+  //     break;
+  // }
 }
