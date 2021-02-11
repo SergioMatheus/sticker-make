@@ -4,7 +4,6 @@ const mime = require("mime-types");
 const crypto = require("crypto");
 const sharp = require("sharp");
 var ffmpegStatic = require("ffmpeg-static");
-var ffprobeStatic = require("ffprobe-static");
 const request = require("request");
 var rimraf = require("rimraf");
 const ffmpeg = require("fluent-ffmpeg");
@@ -403,7 +402,6 @@ async function makeGif(file, id, client, message) {
     ffmpeg(`./temp/${file}`)
       .complexFilter(complexFilter)
       .setFfmpegPath(ffmpegStatic)
-      .setFfprobePath(ffprobeStatic)
       .setStartTime("00:00:00")
       .setDuration("15")
       .toFormat("gif")
