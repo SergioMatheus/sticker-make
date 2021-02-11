@@ -4,6 +4,7 @@ const mime = require("mime-types");
 const crypto = require("crypto");
 const sharp = require("sharp");
 var ffmpegStatic = require("ffmpeg-static");
+var ffprobeStatic = require("ffprobe-static");
 const request = require("request");
 var rimraf = require("rimraf");
 const ffmpeg = require("fluent-ffmpeg");
@@ -87,12 +88,12 @@ async function start(client) {
   const messages = await client.getAllUnreadMessages();
   let idMensagens = [];
   messages.forEach(async (message) => {
-    if (
+    if (message.mentionedJidList.length > 0) {
+      idMensagens.push(message.id.remote);
+    } else if (
       (!message.from.includes("-") && message.type.includes("image")) ||
       (!message.from.includes("-") && message.type.includes("video"))
     ) {
-      idMensagens.push(message.id.remote);
-    } else if (message.mentionedJidList.length > 0) {
       idMensagens.push(message.id.remote);
     }
     await client.sendSeen(message.id.remote);
@@ -124,13 +125,6 @@ async function start(client) {
     ) {
       await genSticker(client, message);
     } else if (!message.isGroupMsg) {
-      if (!message.from.includes("85189322")) {
-        await client.sendLinkPreview(
-          message.from,
-          "https://discord.gg/XrXurhVxRw",
-          "*Junte-se ao Discord do Sticker Maker, para poder enviar suas sugestôes e reportar problemas*"
-        );
-      }
       await genSticker(client, message);
     }
   });
@@ -182,7 +176,7 @@ async function genSticker(client, message) {
         async () =>
           await client.reply(
             message.chatId,
-            "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀",
+            "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀",
             message.id.toString()
           );
       }
@@ -237,7 +231,7 @@ async function genSticker(client, message) {
         .catch(async (err) => {
           await client.reply(
             message.chatId,
-            "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀",
+            "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀",
             message.id.toString()
           );
           console.log(err);
@@ -274,7 +268,7 @@ async function genSticker(client, message) {
         .catch(async (err) => {
           await client.reply(
             message.chatId,
-            "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀",
+            "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀",
             message.id.toString()
           );
           console.log(err);
@@ -288,35 +282,13 @@ async function genSticker(client, message) {
       if (err) {
         await client.sendText(
           message.from,
-          "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀"
+          "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀"
         );
         console.log(err);
       }
     });
 
-    await new Promise((resolve, reject) => {
-      let complexFilter = `scale=512:512:force_original_aspect_ratio=decrease,fps=15 , pad=512:512:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`;
-
-      ffmpeg(`./temp/${file}`)
-        .complexFilter(complexFilter)
-        .setFfmpegPath(ffmpegStatic)
-        .setStartTime("00:00:00")
-        .setDuration("10")
-        .toFormat("gif")
-        .save(`./temp/${id}mod.gif`)
-        .on("error", async (err) => {
-          await client.sendText(
-            message.from,
-            "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀"
-          );
-          console.log(`[ffmpeg] error: ${err.message}`);
-          reject(err);
-        })
-        .on("end", () => {
-          console.log("Redimensionamento feito com sucesso!");
-          resolve();
-        });
-    });
+    await makeGif(file, id, client, message);
 
     const compressGifLossy = async (onProgress) => {
       await compress({
@@ -372,7 +344,7 @@ async function genSticker(client, message) {
             console.log("Error happen while processing file ", error);
             await client.sendText(
               message.from,
-              "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀"
+              "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀"
             );
             console.log(error);
             return;
@@ -382,7 +354,7 @@ async function genSticker(client, message) {
           if (
             statistic &&
             statistic.size_output &&
-            statistic.size_output <= 950000
+            statistic.size_output <= 940000
           ) {
             await sendMessagesDefault(client, message);
 
@@ -394,14 +366,14 @@ async function genSticker(client, message) {
               .catch(async (erro) => {
                 await client.sendText(
                   message.from,
-                  "💀 *Já vi, mas deu erro aqui , tente denovo que eu tento te contar* 💀"
+                  "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀"
                 );
                 console.error("Error ao enviar a mensagem: ", erro);
               });
           } else {
             await client.sendText(
               message.from,
-              "_*Porra meu consagrado(a), seu sticker mesmo comprimindo ainda ficou muito grande, me ajude a te ajudar e diminua ele ai*_"
+              "_*Porra meu consagrado(a), seu sticker mesmo comprimindo ainda ficou muito grande, os stickers enviados sao limitados a 1mb pelo whatsapp, me ajude a te ajudar e diminua ele ai*_"
             );
           }
         });
@@ -424,25 +396,66 @@ async function genSticker(client, message) {
     });
   }
 }
-async function sendMessagesDefault(client, message) {
-  if (!message.from.includes("85189322")) {
-    await client.reply(
-      message.chatId,
-      "💀 *Vou ver e te aviso* 💀",
-      message.id.toString()
-    );
-    await client.sendText(
-      message.from,
-      "*Tá com duvida de como usar o StickerMake? Gostaria de ver as atualizações? utilize nosso catalogo https://wa.me/c/14058170633*"
-    );
-    await client.sendText(
-      message.from,
-      "*Gostou do StickerMake? faça uma doação via pix: a37716cc-5449-4ac6-b38d-1f9de7b67b41*"
-    );
+async function makeGif(file, id, client, message) {
+  await new Promise((resolve, reject) => {
+    let complexFilter = `scale=512:512:force_original_aspect_ratio=decrease,fps=15 , pad=512:512:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`;
 
-    await client.sendText(
-      message.from,
-      "*O StickerMake é de uso gratuito e não temos responsabilidade pelos Stickers criados*"
-    );
+    ffmpeg(`./temp/${file}`)
+      .complexFilter(complexFilter)
+      .setFfmpegPath(ffmpegStatic)
+      .setFfprobePath(ffprobeStatic)
+      .setStartTime("00:00:00")
+      .setDuration("15")
+      .toFormat("gif")
+      .save(`./temp/${id}mod.gif`)
+      .on("error", async (err) => {
+        await client.sendText(
+          message.from,
+          "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀"
+        );
+        console.log(`[ffmpeg] error: ${err.message}`);
+        reject(err);
+      })
+      .on("end", () => {
+        console.log("Redimensionamento feito com sucesso!");
+        resolve();
+      });
+  });
+}
+
+async function sendMessagesDefault(client, message) {
+  switch (message.from) {
+    case message.from.includes("557185189322@g.us"):
+      break;
+    case "557188044044-1494204216@g.us":
+      break;
+    case "557193142784-1495902162@g.us":
+      break;
+
+    default:
+      await client.reply(
+        message.chatId,
+        "💀 *Vou ver e te aviso* 💀",
+        message.id.toString()
+      );
+      await client.sendText(
+        message.from,
+        "*Tá com duvida de como usar o StickerMake? Gostaria de ver as atualizações? utilize nosso catalogo https://wa.me/c/14058170633*"
+      );
+      await client.sendLinkPreview(
+        message.from,
+        "https://discord.gg/XrXurhVxRw",
+        "*Junte-se ao Discord do Sticker Maker, para poder enviar suas sugestôes e reportar problemas*"
+      );
+      await client.sendText(
+        message.from,
+        "*Gostou do StickerMake? faça uma doação via pix: a37716cc-5449-4ac6-b38d-1f9de7b67b41*"
+      );
+
+      await client.sendText(
+        message.from,
+        "*O StickerMake é de uso gratuito e não temos responsabilidade pelos Stickers criados*"
+      );
+      break;
   }
 }
