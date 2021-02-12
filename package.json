@@ -1,25 +1,17 @@
 {
-    "name": "stickermaker",
+    "name": "bot",
     "version": "1.0.0",
+    "description": "",
     "main": "index.js",
     "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node index.js"
     },
     "author": "",
-    "license": "",
-    "description": "",
+    "license": "ISC",
     "dependencies": {
-        "compress-images": "git://github.com/SergioMatheus/compress-images",
-        "ffmpeg-static": "^4.2.7",
+        "@open-wa/wa-automate": "^3.4.1",
         "fluent-ffmpeg": "^2.1.2",
-        "gifit": "0.0.3",
-        "giflossy": "^3.0.41",
-        "gifsicle": "^5.1.0",
-        "mime-types": "^2.1.27",
-        "node-7z": "^2.1.2",
-        "request": "^2.88.2",
-        "rimraf": "^3.0.2",
-        "sharp": "^0.26.2",
-        "venom-bot": "^2.2.3"
+        "sharp": "^0.26.3"
     }
 }
