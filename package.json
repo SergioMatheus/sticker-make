@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@open-wa/wa-automate": "^3.4.1",
+    "@open-wa/wa-automate": "^3.5.0",
     "compress-images": "git://github.com/SergioMatheus/compress-images",
     "ffmpeg-static": "^4.2.7",
     "fluent-ffmpeg": "^2.1.2",
