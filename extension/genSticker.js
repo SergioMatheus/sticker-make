@@ -1,5 +1,4 @@
 const { decryptMedia } = require("@open-wa/wa-automate");
-const fs = require("fs");
 const crypto = require("crypto");
 const { stickerTransparent } = require("./stickerTransparent");
 const { stickerCircular } = require("./stickerCircular");

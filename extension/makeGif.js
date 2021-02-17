@@ -1,6 +1,5 @@
 const { decryptMedia } = require("@open-wa/wa-automate");
 const fs = require("fs");
-const mime = require("mime-types");
 const ffmpegStatic = require("ffmpeg-static");
 const ffmpeg = require("fluent-ffmpeg");
 const { compress } = require("compress-images/promise");
@@ -38,7 +37,7 @@ exports.makeGif = makeGif;
 
 async function stickerAnimate(message, id, client, makeGif) {
   const decryptFile = await decryptMedia(message);
-  const file = `${id}.${mime.extension(message.mimetype)}`;
+  const file = `${id}.mp4`;
   // const file = `${id}.mkv`;
 
   await fs.writeFile(`./temp/${file}`, decryptFile, "base64", async (err) => {

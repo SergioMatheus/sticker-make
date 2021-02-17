@@ -14,9 +14,7 @@
     "compress-images": "git://github.com/SergioMatheus/compress-images",
     "ffmpeg-static": "^4.2.7",
     "fluent-ffmpeg": "^2.1.2",
-    "giflossy": "^3.0.41",
     "gifsicle": "^5.1.0",
-    "mime-types": "^2.1.27",
     "request": "^2.88.2",
     "rimraf": "^3.0.2",
     "sharp": "^0.26.3"

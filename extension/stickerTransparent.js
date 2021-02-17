@@ -11,8 +11,6 @@ function stickerTransparent(message, file, client) {
   } else {
     url = message.body.split(/\s+/)[1];
   }
-  // console.log(url);
-  // const url = "https://pngimage.net/wp-content/uploads/2018/06/new-york-knicks-logo-png-6.png"
   request({ url, encoding: null }, function (error, response, body) {
     if (!error) {
       sharp(body)

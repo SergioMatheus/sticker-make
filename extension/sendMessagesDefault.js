@@ -12,10 +12,6 @@ async function sendMessagesDefault(client, message) {
         "💀 *Vou ver e te aviso* 💀",
         message.id.toString()
       );
-      //     await client.sendText(
-      //       message.from,
-      //       "*Tá com duvida de como usar o StickerMake? Gostaria de ver as atualizações? utilize nosso catalogo https://wa.me/c/14058170633*"
-      //     );
       await client.sendText(
         message.from,
         "*Ajude ao desenvolvimento do StickerMake, faça uma doação via pix: a37716cc-5449-4ac6-b38d-1f9de7b67b41*"
