@@ -1,8 +1,8 @@
 const { create } = require("@open-wa/wa-automate");
 const fs = require("fs");
-const { cleanTemp } = require("./extension/cleanTemp");
-const { genSticker } = require("./extension/genSticker");
-const { notReadMessages } = require("./extension/notReadMessages");
+const { cleanTemp } = require("./src/extension/cleanTemp");
+const { genSticker } = require("./src/extension/genSticker");
+const { notReadMessages } = require("./src/extension/notReadMessages");
 
 create({
   sessionId: "session",
