@@ -10,10 +10,10 @@ async function genSticker(client, message) {
   const file = `./temp/${id}.webp`;
 
   if (message.body.toUpperCase().includes("TRANSPARENTE")) {
-    stickerTransparent(message, file, client);
+    await stickerTransparent(message, file, client);
   } else if (message.type === "image") {
     const mediaData = await decryptMedia(message);
-    const decryptFile = new Buffer(mediaData, "base64");
+    const decryptFile = new Buffer.from(mediaData, "base64");
 
     if (validateCircular(message)) {
       await stickerCircular(decryptFile, file, client, message);
