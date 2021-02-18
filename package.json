@@ -4,18 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "cross-env NODE_ENV=dev nodemon --ignore session.data.json index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@open-wa/wa-automate": "^3.5.0",
     "compress-images": "git://github.com/SergioMatheus/compress-images",
+    "cross-env": "^7.0.3",
     "ffmpeg-static": "^4.2.7",
     "fluent-ffmpeg": "^2.1.2",
     "giflossy": "^3.0.41",
     "gifsicle": "^5.1.0",
+    "mongoose": "^5.11.17",
     "rimraf": "^3.0.2",
     "sharp": "^0.26.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

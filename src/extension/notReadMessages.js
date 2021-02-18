@@ -16,6 +16,7 @@ async function notReadMessages(client) {
     await client.sendSeen(message.from);
   });
   let idMensagensUnique = toUniqueArray(idMensagens);
+  console.log(idMensagens);
   idMensagensUnique.forEach(async (message) => {
     await client.sendText(
       message,
