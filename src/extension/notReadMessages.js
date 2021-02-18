@@ -1,3 +1,7 @@
+// adotar estrategias pra este caso, sistema sera 24/7?, caso sim se cair foda-se, manda uma mensagem default pra galera dizendo pra reenviar pois esteve fora do ar ...
+
+
+
 async function notReadMessages(client) {
   const messages = await client.getAllUnreadMessages();
   let idMensagens = [];
@@ -16,7 +20,6 @@ async function notReadMessages(client) {
     await client.sendSeen(message.from);
   });
   let idMensagensUnique = toUniqueArray(idMensagens);
-  console.log(idMensagens);
   idMensagensUnique.forEach(async (message) => {
     await client.sendText(
       message,

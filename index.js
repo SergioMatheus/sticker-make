@@ -3,7 +3,7 @@ const fs = require("fs");
 const { cleanTemp } = require("./src/extension/cleanTemp");
 const { genSticker } = require("./src/extension/genSticker");
 const { notReadMessages } = require("./src/extension/notReadMessages");
-
+const User = require('./src/entities/users');
 const TEST_NUMBERS = ['5571988044044@c.us', '557199145852@c.us'];
 const NUMBER_ID = '14058170633@c.us';
 const IS_DEVELOPP = process.env.NODE_ENV !== 'DEV';
@@ -56,8 +56,14 @@ async function developmentModeRun(client) {
     if (length && length > 50) {
       await cleanTemp();
     }
-    console.log(message.from);
+  
     if (!message.isGroupMsg && TEST_NUMBERS.includes(message.from)) {
+      const foundedUser = await User.findOne({ phoneId: message.from });
+
+      if (!foundedUser) {
+        await User.create({ name: message.sender.pushname, phoneId: message.from })
+      }
+      
       await genSticker(client, message);
     }
   });
