@@ -1,40 +1,43 @@
 // adotar estrategias pra este caso, sistema sera 24/7?, caso sim se cair foda-se, manda uma mensagem default pra galera dizendo pra reenviar pois esteve fora do ar ...
-
-
+const User = require("../entities/users");
+const { genSticker } = require("./genSticker");
+const NUMBER_ID = "14058170633@c.us";
 
 async function notReadMessages(client) {
   const messages = await client.getAllUnreadMessages();
-  let idMensagens = [];
   messages.forEach(async (message) => {
-    if (
-      message.mentionedJidList.length > 0 &&
-      message.mentionedJidList.includes("14058170633@c.us")
-    ) {
-      idMensagens.push(message.from);
-    } else if (
-      (!message.from.includes("-") && message.type.includes("image")) ||
-      (!message.from.includes("-") && message.type.includes("video"))
-    ) {
-      idMensagens.push(message.from);
+    if (isMentionedInGroup(message)) {
+      saveAndGenSticker(message, client);
+    } else if (!message.isGroupMsg) {
+      saveAndGenSticker(message, client);
+    } else {
+      await client.sendSeen(message.from);
     }
     await client.sendSeen(message.from);
   });
-  let idMensagensUnique = toUniqueArray(idMensagens);
-  idMensagensUnique.forEach(async (message) => {
-    await client.sendText(
-      message,
-      "*Tava off no momento que você mandou a foto, tente novamente.*"
-    );
-  });
 }
 
-function toUniqueArray(a) {
-  var newArr = [];
-  for (var i = 0; i < a.length; i++) {
-    if (newArr.indexOf(a[i]) === -1) {
-      newArr.push(a[i]);
-    }
+async function saveAndGenSticker(message, client) {
+  const foundedUserGroup = await User.findOne({ phoneId: message.from });
+  if (!foundedUserGroup) {
+    await User.create({
+      name: message.sender.pushname,
+      phoneId: message.from,
+    });
+    console.log(
+      `O Usuario: ${message.sender.pushname} foi salvo na base de dados`
+    );
   }
-  return newArr;
+  await genSticker(client, message);
+  await client.sendSeen(message.from);
 }
+
+function isMentionedInGroup(message) {
+  return !!(
+    message.isGroupMsg &&
+    message.mentionedJidList.length > 0 &&
+    message.mentionedJidList[0] == NUMBER_ID
+  );
+}
+
 exports.notReadMessages = notReadMessages;

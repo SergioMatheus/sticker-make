@@ -1,20 +1,27 @@
 const { decryptMedia } = require("@open-wa/wa-automate");
 const crypto = require("crypto");
 const { stickerTransparent } = require("./stickerTransparent");
+const {
+  stickerTransparentWithoutUrl,
+} = require("./stickerTransparentWithoutUrl");
 const { stickerCircular } = require("./stickerCircular");
 const { stickerQuadrado } = require("./stickerQuadrado");
 const { stickerAnimate, makeGif } = require("./makeGif");
 
 async function genSticker(client, message) {
+  const mediaData = await decryptMedia(message);
+  const decryptFile = new Buffer.from(mediaData, "base64");
   const id = crypto.randomBytes(16).toString("hex");
-  const file = `./temp/${id}.webp`;
+  const file = `./temp/${id}.png`;
 
   if (message.body.toUpperCase().includes("TRANSPARENTE")) {
-    await stickerTransparent(message, file, client);
+    await stickerTransparent(message, client);
+  } else if (
+    message.caption &&
+    message.caption.toUpperCase().includes("TRANSPARENTE")
+  ) {
+    await stickerTransparentWithoutUrl(decryptFile, file, client, message);
   } else if (message.type === "image") {
-    const mediaData = await decryptMedia(message);
-    const decryptFile = new Buffer.from(mediaData, "base64");
-
     if (validateCircular(message)) {
       await stickerCircular(decryptFile, file, client, message);
     } else {

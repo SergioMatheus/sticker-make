@@ -1,7 +1,7 @@
 const { cleanTemp } = require("./cleanTemp");
 const { sendMessagesDefault } = require("./sendMessagesDefault");
 
-async function stickerTransparent(message, file, client) {
+async function stickerTransparent(message, client) {
   let url;
   if (message.isGroupMsg) {
     url = message.body.split(/\s+/)[2];
