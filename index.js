@@ -4,9 +4,9 @@ const { cleanTemp } = require("./src/extension/cleanTemp");
 const { genSticker } = require("./src/extension/genSticker");
 const { notReadMessages } = require("./src/extension/notReadMessages");
 const User = require("./src/entities/users");
-var cron = require("node-cron");
+// var cron = require("node-cron");
 const TEST_NUMBERS = ["5571988044044@c.us", "557199145852@c.us"];
-const NUMBER_ID = "14058170633@c.us";
+const NUMBER_ID = "557184003585@c.us";
 const IS_DEVELOPP = process.env.NODE_ENV !== "DEV";
 
 create({
@@ -23,14 +23,12 @@ create({
   return IS_DEVELOPP ? productionModeRun(client) : developmentModeRun(client);
 });
 
-cron.schedule("*/20 * * * *", async function () {
-  await cleanTemp();
-});
+// cron.schedule("*/59 * * * *", async function () {
+//   await cleanTemp();
+// });
 
 async function productionModeRun(client) {
   await cleanTemp();
-
-  // await sendAllMessage(client);
 
   await notReadMessages(client);
 
@@ -45,15 +43,6 @@ async function productionModeRun(client) {
   });
 }
 
-async function sendAllMessage(client) {
-  let foundedUsers = await User.find({});
-  foundedUsers.forEach(async (user) => {
-    await client.sendText(
-      user.phoneId,
-      "*Sim ele voltou o bot mais temido do whatsapp, Adicione novamente o nosso novo número.*"
-    );
-  });
-}
 async function saveAndGenSticker(message, client) {
   const foundedUserGroup = await User.findOne({ phoneId: message.from });
   if (!foundedUserGroup) {
