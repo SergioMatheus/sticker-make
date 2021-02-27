@@ -5,6 +5,7 @@ const { genSticker } = require("./src/extension/genSticker");
 const { notReadMessages } = require("./src/extension/notReadMessages");
 const User = require("./src/entities/users");
 // var cron = require("node-cron");
+var pm2 = require('pm2');
 const TEST_NUMBERS = ["5571988044044@c.us", "557199145852@c.us"];
 const NUMBER_ID = "557184003585@c.us";
 const IS_DEVELOPP = process.env.NODE_ENV !== "DEV";
@@ -28,6 +29,17 @@ create({
 // });
 
 async function productionModeRun(client) {
+
+  // pm2.connect(function(err) {
+  //   if (err) throw err;
+
+  // setTimeout(function worker() {
+  //   console.log("Restarting app StickerMake");
+  //   pm2.restart('app', function() {});
+  //   setTimeout(worker, 1800000);
+  //   }, 1800000);
+  // });
+
   await cleanTemp();
 
   await notReadMessages(client);

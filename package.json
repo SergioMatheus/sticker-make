@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=prod && pm2 start index.js --name stickermake",
+    "start": "cross-env NODE_ENV=prod && pm2 start ./src/config/config-pm2.json",
     "dev": "cross-env NODE_ENV=dev nodemon --ignore session.data.json index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@open-wa/wa-automate": "^3.6.11",
+    "@open-wa/wa-automate": "^3.6.13",
     "compress-images": "git://github.com/SergioMatheus/compress-images",
     "cross-env": "^7.0.3",
     "ffmpeg-static": "^4.2.7",
@@ -19,6 +19,7 @@
     "gifsicle": "^5.1.0",
     "mongoose": "^5.11.17",
     "node-cron": "^2.0.3",
+    "pm2": "^4.5.4",
     "replace-color": "^2.3.0",
     "rimraf": "^3.0.2",
     "sharp": "^0.26.3"
