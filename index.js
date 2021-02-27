@@ -56,9 +56,9 @@ async function productionModeRun(client) {
 }
 
 async function saveAndGenSticker(message, client) {
-  const foundedUserGroup = await User.findOne({ phoneId: message.from });
-  if (!foundedUserGroup) {
-    await User.create({
+  let user = await User.findOne({ phoneId: message.from });
+  if (!user) {
+    user = await User.create({
       name: message.sender.pushname,
       phoneId: message.from,
     });
@@ -66,7 +66,7 @@ async function saveAndGenSticker(message, client) {
       `O Usuario: ${message.sender.pushname} foi salvo na base de dados`
     );
   }
-  await genSticker(client, message);
+  await genSticker(client, message, user);
   await client.sendSeen(message.from);
 }
 exports.saveAndGenSticker = saveAndGenSticker;
