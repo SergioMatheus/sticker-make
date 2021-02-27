@@ -1,0 +1,14 @@
+{
+  "apps": [
+    {
+      "name": "stickermake",
+      "script": "node index.js",
+      "instances": 1,
+      "exec_mode": "fork",
+      "watch": false,
+      "cron_restart": "*/59 * * * *",
+      "autorestart": false,
+      "log_date_format": "YYYY-MM-DD HH:mm"
+    }
+  ]
+}
