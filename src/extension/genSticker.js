@@ -44,6 +44,10 @@ async function genSticker(client, message, user) {
   const image = fs.statSync(file);
   const imageSize = image.size / TO_CONVERT_TO_MB;
   await Message.create({ user_id: user._id, image_size: imageSize });
+  await client.sendText(
+    message.from,
+    "* https://url.gratis/poTBI <<- Ajude a nos batizar caso esteja gostando do nosso serviço! *"
+  );
 }
 
 async function messageNotSticker(client, message) {
