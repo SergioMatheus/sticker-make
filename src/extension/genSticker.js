@@ -14,7 +14,7 @@ async function genSticker(client, message) {
   const id = crypto.randomBytes(16).toString("hex");
   const file = `./temp/${id}.png`;
 
-  if (message.body.toUpperCase().includes("TRANSPARENTE")) {
+  if (message.body && message.body.toUpperCase().includes("TRANSPARENTE")) {
     await stickerTransparent(message, client);
   } else if (
     message.caption &&
