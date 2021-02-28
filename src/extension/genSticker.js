@@ -7,18 +7,26 @@ const {
 const { stickerCircular } = require("./stickerCircular");
 const { stickerQuadrado } = require("./stickerQuadrado");
 const { stickerAnimate, makeGif } = require("./makeGif");
+const Message = require("../entities/messages");
+const fs = require("fs");
+const TO_CONVERT_TO_MB = 1000000.0;
 
-async function genSticker(client, message) {
+async function genSticker(client, message, user) {
   const mediaData = await decryptMedia(message);
   const decryptFile = new Buffer.from(mediaData, "base64");
   const id = crypto.randomBytes(16).toString("hex");
   const file = `./temp/${id}.png`;
 
-  if (message.body && message.body.toUpperCase().includes("TRANSPARENTE")) {
+  const TRANSLUCENT_STICKER = message.body && message.body.toUpperCase().includes("TRANSPARENTE");
+
+  const TRANSLUCENT_STICKER_WITHOUT_URL = message.caption &&
+    message.caption.toUpperCase().includes("TRANSPARENTE");
+
+
+  if (TRANSLUCENT_STICKER) {
     await stickerTransparent(message, client);
   } else if (
-    message.caption &&
-    message.caption.toUpperCase().includes("TRANSPARENTE")
+    TRANSLUCENT_STICKER_WITHOUT_URL
   ) {
     await stickerTransparentWithoutUrl(decryptFile, file, client, message);
   } else if (message.type === "image") {
@@ -32,6 +40,14 @@ async function genSticker(client, message) {
   } else {
     await messageNotSticker(client, message);
   }
+
+  const image = fs.statSync(file);
+  const imageSize = image.size / TO_CONVERT_TO_MB;
+  await Message.create({ user_id: user._id, image_size: imageSize });
+  await client.sendText(
+    message.from,
+    "* https://url.gratis/poTBI <<- Ajude a nos batizar caso esteja gostando do nosso serviço! *"
+  );
 }
 
 async function messageNotSticker(client, message) {
