@@ -12,6 +12,7 @@ const fs = require("fs");
 const TO_CONVERT_TO_MB = 1000000.0;
 
 async function genSticker(client, message, user) {
+  //fazer try catch do decriptMedia
   const mediaData = await decryptMedia(message);
   const decryptFile = new Buffer.from(mediaData, "base64");
   const id = crypto.randomBytes(16).toString("hex");
@@ -44,16 +45,12 @@ async function genSticker(client, message, user) {
   const image = fs.statSync(file);
   const imageSize = image.size / TO_CONVERT_TO_MB;
   await Message.create({ user_id: user._id, image_size: imageSize });
-  await client.sendText(
-    message.from,
-    "* https://url.gratis/poTBI <<- Ajude a nos batizar caso esteja gostando do nosso serviço! *"
-  );
 }
 
 async function messageNotSticker(client, message) {
   await client.sendText(
-    message.from,
-    "*Tá com duvida de como usar o StickerMake? Gostaria de ver as atualizações? utilize nosso catalogo https://wa.me/c/14058170633*"
+    message.chatId,
+    "*https://bit.ly/3r24BDe <- Ajude-nos a batizar o bot caso esteja gostando do nosso serviço!*"
   );
   await client.sendText(
     message.from,
