@@ -4,6 +4,8 @@ const ffmpegStatic = require("ffmpeg-static");
 const ffmpeg = require("fluent-ffmpeg");
 const { compress } = require("compress-images/promise");
 const { cleanTemp } = require("./cleanTemp");
+const { sendMessageDatabase } = require("./sendMessageDatabase");
+const { formatBytes } = require("./formatBytes");
 const { sendMessagesDefault } = require("./sendMessagesDefault");
 
 async function makeGif(file, id, client, message) {
@@ -35,7 +37,7 @@ async function makeGif(file, id, client, message) {
 }
 exports.makeGif = makeGif;
 
-async function stickerAnimate(message, id, client, makeGif) {
+async function stickerAnimate(message, id, client, makeGif, user) {
   const decryptFile = await decryptMedia(message);
   const file = `${id}.mp4`;
   // const file = `${id}.mkv`;
@@ -115,11 +117,14 @@ async function stickerAnimate(message, id, client, makeGif) {
         }
 
         console.log("Gif processado com sucesso");
+        let sizeGif;
         if (
           statistic &&
           statistic.size_output &&
           statistic.size_output <= 940000
         ) {
+          sizeGif = await formatBytes(statistic.size_output);
+
           await sendMessagesDefault(client, message);
 
           const fileBase64 = await base64_encode(statistic.path_out_new);
@@ -137,32 +142,21 @@ async function stickerAnimate(message, id, client, makeGif) {
               console.error("Error ao enviar a mensagem: ", erro);
             });
         } else {
-          let sizeGifInvalid = await formatBytes(statistic.size_output);
+          sizeGif = await formatBytes(statistic.size_output);
           await client.sendText(
             message.from,
             `_*Porra meu consagrado(a), seu sticker mesmo comprimindo ainda ficou muito grande,*_
-            \n*Tamanho comprimido: ${sizeGifInvalid},*
             \n_*Os stickers enviados sao limitados a 1mb pelo whatsapp, me ajude a te ajudar e diminua ele ai*_`
           );
           await cleanTemp();
         }
+
+        await sendMessageDatabase(user, sizeGif);
       });
     });
   });
 }
 exports.stickerAnimate = stickerAnimate;
-
-async function formatBytes(bytes, decimals = 2) {
-  if (bytes === 0) return "0 Bytes";
-
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
-}
 
 async function base64_encode(file) {
   var bitmap = fs.readFileSync(file);

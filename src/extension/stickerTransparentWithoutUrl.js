@@ -5,6 +5,8 @@ const replaceColor = require("replace-color");
 const { sendMessagesDefault } = require("./sendMessagesDefault");
 const crypto = require("crypto");
 const id = crypto.randomBytes(16).toString("hex");
+const { formatBytes } = require("./formatBytes");
+const { sendMessageDatabase } = require("./sendMessageDatabase");
 const filePNG = `./temp/${id}.png`;
 let filePath = "";
 
@@ -12,7 +14,8 @@ async function stickerTransparentWithoutUrl(
   decryptFile,
   file,
   client,
-  message
+  message,
+  user
 ) {
   filePath = file;
   await sharp(decryptFile)
@@ -31,6 +34,10 @@ async function stickerTransparentWithoutUrl(
     .toFile(file)
     .then(async (info) => {
       console.log("Foto Convertida e comprimida com sucesso");
+
+      let sizeGif = await formatBytes(info.size);
+
+      await sendMessageDatabase(user, sizeGif);
 
       await sendMessagesDefault(client, message);
 

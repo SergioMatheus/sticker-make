@@ -2,8 +2,10 @@ const sharp = require("sharp");
 const { cleanTemp } = require("./cleanTemp");
 const fs = require("fs");
 const { sendMessagesDefault } = require("./sendMessagesDefault");
+const { formatBytes } = require("./formatBytes");
+const { sendMessageDatabase } = require("./sendMessageDatabase");
 
-async function stickerCircular(decryptFile, file, client, message) {
+async function stickerCircular(decryptFile, file, client, message, user) {
   const width = 460,
     r = width / 2,
     circleShape = Buffer.from(
@@ -31,6 +33,10 @@ async function stickerCircular(decryptFile, file, client, message) {
     .toFile(file)
     .then(async (info) => {
       console.log("Foto Convertida e comprimida com sucesso");
+
+      let sizeGif = await formatBytes(info.size);
+
+      await sendMessageDatabase(user, sizeGif);
 
       await sendMessagesDefault(client, message);
 

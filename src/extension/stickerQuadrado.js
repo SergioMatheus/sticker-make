@@ -2,8 +2,10 @@ const sharp = require("sharp");
 const { cleanTemp } = require("./cleanTemp");
 const fs = require("fs");
 const { sendMessagesDefault } = require("./sendMessagesDefault");
+const { formatBytes } = require("./formatBytes");
+const { sendMessageDatabase } = require("./sendMessageDatabase");
 
-async function stickerQuadrado(decryptFile, file, client, message) {
+async function stickerQuadrado(decryptFile, file, client, message, user) {
   await sharp(decryptFile)
     .resize({
       width: 512,
@@ -20,6 +22,10 @@ async function stickerQuadrado(decryptFile, file, client, message) {
     .toFile(file)
     .then(async (info) => {
       console.log("Foto Convertida e comprimida com sucesso");
+
+      let sizeGif = await formatBytes(info.size);
+
+      await sendMessageDatabase(user, sizeGif);
 
       await sendMessagesDefault(client, message);
 
