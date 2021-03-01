@@ -4,7 +4,7 @@ const { cleanTemp } = require("./src/extension/cleanTemp");
 const { genSticker } = require("./src/extension/genSticker");
 const { notReadMessages } = require("./src/extension/notReadMessages");
 const User = require("./src/entities/users");
-// var cron = require("node-cron");
+var cron = require("node-cron");
 var pm2 = require("pm2");
 const TEST_NUMBERS = [
   "5571988044044@c.us",
@@ -30,9 +30,9 @@ create({
   return IS_DEVELOPP ? productionModeRun(client) : developmentModeRun(client);
 });
 
-// cron.schedule("*/59 * * * *", async function () {
-//   await cleanTemp();
-// });
+cron.schedule("*/30 * * * *", async function () {
+  await cleanTemp();
+});
 
 async function productionModeRun(client) {
   // pm2.connect(function(err) {
@@ -45,9 +45,14 @@ async function productionModeRun(client) {
   //   }, 1800000);
   // });
 
-  await cleanTemp();
-
   await notReadMessages(client);
+
+  let chatIds = await client.getAllChatIds();
+  chatIds.forEach(async (element) => {
+    await client.clearChat(element);
+  });
+
+  console.log("Mensagens apagadas com sucesso");
 
   client.onMessage(async (message) => {
     if (isMentionedInGroup(message)) {
