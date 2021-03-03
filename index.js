@@ -47,22 +47,24 @@ async function productionModeRun(client) {
 
   await notReadMessages(client);
 
-  let chatIds = await client.getAllChatIds();
-  chatIds.forEach(async (element) => {
-    await client.clearChat(element);
-  });
+  setTimeout(async () => {
+    let chatIds = await client.getAllChatIds();
+    chatIds.forEach(async (element) => {
+      await client.deleteChat(element);
+    });
 
-  console.log("Mensagens apagadas com sucesso");
+    console.log("Mensagens apagadas com sucesso");
 
-  client.onMessage(async (message) => {
-    if (isMentionedInGroup(message)) {
-      await saveAndGenSticker(message, client);
-    } else if (!message.isGroupMsg) {
-      await saveAndGenSticker(message, client);
-    } else {
-      await client.sendSeen(message.from);
-    }
-  });
+    client.onMessage(async (message) => {
+      if (isMentionedInGroup(message)) {
+        await saveAndGenSticker(message, client);
+      } else if (!message.isGroupMsg) {
+        await saveAndGenSticker(message, client);
+      } else {
+        await client.sendSeen(message.from);
+      }
+    });
+  }, 10000);
 }
 
 async function saveAndGenSticker(message, client) {
