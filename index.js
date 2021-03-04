@@ -5,7 +5,6 @@ const { genSticker } = require("./src/extension/genSticker");
 const { notReadMessages } = require("./src/extension/notReadMessages");
 const User = require("./src/entities/users");
 var cron = require("node-cron");
-var pm2 = require("pm2");
 const TEST_NUMBERS = [
   "5571988044044@c.us",
   "557199145852@c.us",
