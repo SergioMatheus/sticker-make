@@ -48,7 +48,6 @@ async function stickerCircular(decryptFile, file, client, message, user) {
           console.log("Mensagem enviada para: ", result);
         })
         .catch(async (erro) => {
-          await cleanTemp();
           console.error("Error when sending: ", erro);
         });
     })
@@ -58,7 +57,6 @@ async function stickerCircular(decryptFile, file, client, message, user) {
         "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀",
         message.id.toString()
       );
-      await cleanTemp();
       console.log(err);
     });
 }

@@ -17,6 +17,7 @@ async function stickerTransparentWithoutUrl(
   message,
   user
 ) {
+  sharp.cache(false);
   filePath = file;
   await sharp(decryptFile)
     .resize({
@@ -57,12 +58,11 @@ async function stickerTransparentWithoutUrl(
             const fileBase64PNG = await base64_encode(filePNG);
 
             await client
-              .sendImageAsSticker(message.from, fileBase64PNG)
+              .sendImageAsSticker(message.chatId, fileBase64PNG)
               .then((result) => {
                 console.log("Mensagem enviada para: ", result);
               })
               .catch(async (erro) => {
-                await cleanTemp();
                 console.error("Error when sending: ", erro);
               });
           });
@@ -77,7 +77,6 @@ async function stickerTransparentWithoutUrl(
         "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀",
         message.id.toString()
       );
-      await cleanTemp();
       console.log(err);
     });
 }

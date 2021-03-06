@@ -3,7 +3,6 @@ const fs = require("fs");
 const ffmpegStatic = require("ffmpeg-static");
 const ffmpeg = require("fluent-ffmpeg");
 const { compress } = require("compress-images/promise");
-const { cleanTemp } = require("./cleanTemp");
 const { sendMessageDatabase } = require("./sendMessageDatabase");
 const { formatBytes } = require("./formatBytes");
 const { sendMessagesDefault } = require("./sendMessagesDefault");
@@ -22,11 +21,10 @@ async function makeGif(file, id, client, message) {
       .save(`./temp/${id}mod.gif`)
       .on("error", async (err) => {
         await client.sendText(
-          message.from,
+          message.chatId,
           "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀"
         );
         console.log(`[ffmpeg] error: ${err.message}`);
-        await cleanTemp();
         reject(err);
       })
       .on("end", () => {
@@ -45,10 +43,9 @@ async function stickerAnimate(message, id, client, makeGif, user) {
   await fs.writeFile(`./temp/${file}`, decryptFile, "base64", async (err) => {
     if (err) {
       await client.sendText(
-        message.from,
+        message.chatid,
         "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀"
       );
-      await cleanTemp();
       console.log(err);
     }
   });
@@ -108,11 +105,10 @@ async function stickerAnimate(message, id, client, makeGif, user) {
         if (error) {
           console.log("Error happen while processing file ", error);
           await client.sendText(
-            message.from,
+            message.chatid,
             "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀"
           );
           console.log(error);
-          await cleanTemp();
           return;
         }
 
@@ -134,9 +130,8 @@ async function stickerAnimate(message, id, client, makeGif, user) {
               console.log("Mensagem enviada para: ", result);
             })
             .catch(async (erro) => {
-              await cleanTemp();
               await client.sendText(
-                message.from,
+                message.chatid,
                 "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀"
               );
               console.error("Error ao enviar a mensagem: ", erro);
@@ -144,11 +139,10 @@ async function stickerAnimate(message, id, client, makeGif, user) {
         } else {
           sizeGif = await formatBytes(statistic.size_output);
           await client.sendText(
-            message.from,
+            message.chatid,
             `_*Porra meu consagrado(a), seu sticker mesmo comprimindo ainda ficou muito grande,*_
             \n_*Os stickers enviados sao limitados a 1mb pelo whatsapp, me ajude a te ajudar e diminua ele ai*_`
           );
-          await cleanTemp();
         }
 
         await sendMessageDatabase(user, sizeGif);

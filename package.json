@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@open-wa/wa-automate": "^3.7.0",
+    "amqplib": "^0.7.0",
     "compress-images": "git://github.com/SergioMatheus/compress-images",
     "cross-env": "^7.0.3",
     "ffmpeg-static": "^4.2.7",
@@ -21,7 +22,8 @@
     "node-cron": "^2.0.3",
     "replace-color": "^2.3.0",
     "rimraf": "^3.0.2",
-    "sharp": "^0.26.3"
+    "sharp": "^0.26.3",
+    "text2png": "git://github.com/SergioMatheus/text2png"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"

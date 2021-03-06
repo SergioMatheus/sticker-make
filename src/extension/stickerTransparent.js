@@ -17,7 +17,6 @@ async function stickerTransparent(message, client) {
       console.log("Mensagem enviada para: ", result);
     })
     .catch(async (erro) => {
-      await cleanTemp();
       console.error("Error when sending: ", erro);
     });
 }
