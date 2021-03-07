@@ -58,7 +58,7 @@ async function stickerTransparentWithoutUrl(
             const fileBase64PNG = await base64_encode(filePNG);
 
             await client
-              .sendImageAsSticker(message.chatId, fileBase64PNG)
+              .sendImageAsSticker(message.from, fileBase64PNG)
               .then((result) => {
                 console.log("Mensagem enviada para: ", result);
               })
@@ -73,7 +73,7 @@ async function stickerTransparentWithoutUrl(
     })
     .catch(async (err) => {
       await client.reply(
-        message.chatId,
+        message.from,
         "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀",
         message.id.toString()
       );

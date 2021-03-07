@@ -22,6 +22,7 @@
     "node-cron": "^2.0.3",
     "replace-color": "^2.3.0",
     "rimraf": "^3.0.2",
+    "p-queue": "^6.6.2",
     "sharp": "^0.26.3",
     "text2png": "git://github.com/SergioMatheus/text2png"
   },

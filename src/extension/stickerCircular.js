@@ -53,7 +53,7 @@ async function stickerCircular(decryptFile, file, client, message, user) {
     })
     .catch(async (err) => {
       await client.reply(
-        message.chatId,
+        message.from,
         "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀",
         message.id.toString()
       );

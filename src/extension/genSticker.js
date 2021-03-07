@@ -14,9 +14,9 @@ async function genSticker(client, message, user) {
   const id = crypto.randomBytes(16).toString("hex");
   const file = `./temp/${id}.png`;
 
-  // if (message.body.includes("text")) {
-  //   return await generateTextAndCallSticker(message, file, client, user);
-  // }
+  if (message && message.body && message.body.includes("text")) {
+    return await generateTextAndCallSticker(message, file, client, user);
+  }
 
   if (message.type === "chat") {
     return await messageNotSticker(client, message);
@@ -60,15 +60,15 @@ async function generateTextAndCallSticker(message, file, client, user) {
 
 async function messageNotSticker(client, message) {
   await client.sendText(
-    message.chatId,
+    message.from,
     "*https://bit.ly/3r24BDe <- Ajude-nos a batizar o bot caso esteja gostando do nosso serviço!*"
   );
   await client.sendText(
-    message.chatId,
+    message.from,
     "*Junte-se ao Discord do Sticker Maker, https://discord.gg/XrXurhVxRw, para poder enviar suas sugestôes e reportar problemas*"
   );
   await client.sendText(
-    message.chatId,
+    message.from,
     "*Envie-me no chat privado ou marque no grupo com uma imagem ou gif de ate 15 segundos, para receber de volta em forma de figurinha*"
   );
 }

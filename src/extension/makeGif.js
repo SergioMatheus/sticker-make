@@ -21,7 +21,7 @@ async function makeGif(file, id, client, message) {
       .save(`./temp/${id}mod.gif`)
       .on("error", async (err) => {
         await client.sendText(
-          message.chatId,
+          message.from,
           "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀"
         );
         console.log(`[ffmpeg] error: ${err.message}`);
@@ -43,7 +43,7 @@ async function stickerAnimate(message, id, client, makeGif, user) {
   await fs.writeFile(`./temp/${file}`, decryptFile, "base64", async (err) => {
     if (err) {
       await client.sendText(
-        message.chatid,
+        message.from,
         "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀"
       );
       console.log(err);
@@ -105,7 +105,7 @@ async function stickerAnimate(message, id, client, makeGif, user) {
         if (error) {
           console.log("Error happen while processing file ", error);
           await client.sendText(
-            message.chatid,
+            message.from,
             "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀"
           );
           console.log(error);
@@ -131,7 +131,7 @@ async function stickerAnimate(message, id, client, makeGif, user) {
             })
             .catch(async (erro) => {
               await client.sendText(
-                message.chatid,
+                message.from,
                 "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀"
               );
               console.error("Error ao enviar a mensagem: ", erro);
@@ -139,7 +139,7 @@ async function stickerAnimate(message, id, client, makeGif, user) {
         } else {
           sizeGif = await formatBytes(statistic.size_output);
           await client.sendText(
-            message.chatid,
+            message.from,
             `_*Porra meu consagrado(a), seu sticker mesmo comprimindo ainda ficou muito grande,*_
             \n_*Os stickers enviados sao limitados a 1mb pelo whatsapp, me ajude a te ajudar e diminua ele ai*_`
           );
