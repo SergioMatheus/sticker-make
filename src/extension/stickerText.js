@@ -1,17 +1,27 @@
 const sharp = require("sharp");
-const { cleanTemp } = require("./cleanTemp");
 const fs = require("fs");
 const { sendMessagesDefault } = require("./sendMessagesDefault");
 const { formatBytes } = require("./formatBytes");
 const { sendMessageDatabase } = require("./sendMessageDatabase");
+var text2png = require("text2png");
+let filePath = "";
 
-async function stickerCircular(decryptFile, file, client, message, user) {
-  const width = 460,
-    r = width / 2,
-    circleShape = Buffer.from(
-      `<svg><circle cx="${r}" cy="${r}" r="${r}" /></svg>`
-    );
-  await sharp(decryptFile)
+async function stickerText(file, client, message, user) {
+  sharp.cache(false);
+  let textoPng = message.body.replace("text ", "");
+  if (message.isGroupMsg) {
+    textoPng = textoPng.replace("@557184003585", "");
+  }
+  let bufferTextImg = await text2png(textoPng.replace("//n", "/n"), {
+    font: "80px sans-serif",
+    color: "black",
+    bgColor: "alterado na lib",
+    textAlign: "center",
+    lineSpacing: 20,
+    padding: 35,
+  });
+  filePath = file;
+  await sharp(bufferTextImg)
     .resize({
       width: 512,
       height: 512,
@@ -23,27 +33,21 @@ async function stickerCircular(decryptFile, file, client, message, user) {
         alpha: 0,
       },
     })
-    .composite([
-      {
-        input: circleShape,
-        blend: "dest-in",
-      },
-    ])
-    .webp({ quality: 80 })
+    .png()
     .toFile(file)
     .then(async (info) => {
       console.log("Foto Convertida e comprimida com sucesso");
 
       let sizeGif = await formatBytes(info.size);
 
-      await sendMessageDatabase(user, sizeGif,"Circular");
+      await sendMessageDatabase(user, sizeGif,"Texto");
 
       await sendMessagesDefault(client, message);
 
-      const fileBase64 = await base64_encode(file);
+      const fileBase64PNG = await base64_encode(filePath);
 
       await client
-        .sendRawWebpAsSticker(message.from, fileBase64)
+        .sendImageAsSticker(message.chatId, fileBase64PNG)
         .then((result) => {
           console.log("Mensagem enviada para: ", result);
         })
@@ -60,7 +64,7 @@ async function stickerCircular(decryptFile, file, client, message, user) {
       console.log(err);
     });
 }
-exports.stickerCircular = stickerCircular;
+exports.stickerText = stickerText;
 
 async function base64_encode(file) {
   var bitmap = fs.readFileSync(file);

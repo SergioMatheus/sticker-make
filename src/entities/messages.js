@@ -1,12 +1,15 @@
-const mongoose = require('../config/database');
+const mongoose = require("../config/database");
 
 const MessageSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
   },
   image_size: {
     type: Number,
+  },
+  image_type: {
+    type: String,
   },
   created_at: {
     type: Date,
@@ -15,9 +18,9 @@ const MessageSchema = new mongoose.Schema({
   updated_at: {
     type: Date,
     default: null,
-  }
+  },
 });
 
-const Message = mongoose.model('Message', MessageSchema);
+const Message = mongoose.model("Message", MessageSchema);
 
 module.exports = Message;

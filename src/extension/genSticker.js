@@ -7,37 +7,19 @@ const {
 const { stickerCircular } = require("./stickerCircular");
 const { stickerQuadrado } = require("./stickerQuadrado");
 const { stickerAnimate, makeGif } = require("./makeGif");
-var text2png = require("text2png");
+const { stickerText } = require("./stickerText");
 
 async function genSticker(client, message, user) {
   //fazer try catch do decriptMedia
   const id = crypto.randomBytes(16).toString("hex");
   const file = `./temp/${id}.png`;
 
-  if (message.body.includes("text")) {
-    var textoPng = message.body.replace("text ", "");
-    if (message.isGroupMsg) {
-      textoPng = textoPng.replace('@557184003585', "");
-    }
-    var bufferTextImg = text2png(textoPng.replace("//n", "/n"), {
-      font: "80px Futura",
-      color: "teal",
-      textAlign: "center",
-      lineSpacing: 10,
-      padding: 20,
-    });
-    await stickerTransparentWithoutUrl(
-      bufferTextImg,
-      file,
-      client,
-      message,
-      user
-    );
-    return;
-  }
+  // if (message.body.includes("text")) {
+  //   return await generateTextAndCallSticker(message, file, client, user);
+  // }
+
   if (message.type === "chat") {
-    await messageNotSticker(client, message);
-    return;
+    return await messageNotSticker(client, message);
   }
 
   const mediaData = await decryptMedia(message);
@@ -67,6 +49,12 @@ async function genSticker(client, message, user) {
     }
   } else if (message.type === "video") {
     await stickerAnimate(message, id, client, makeGif, user);
+  }
+}
+
+async function generateTextAndCallSticker(message, file, client, user) {
+  if (message.type === "chat") {
+    return await stickerText(file, client, message, user);
   }
 }
 

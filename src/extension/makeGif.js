@@ -145,7 +145,7 @@ async function stickerAnimate(message, id, client, makeGif, user) {
           );
         }
 
-        await sendMessageDatabase(user, sizeGif);
+        await sendMessageDatabase(user, sizeGif,"Gif");
       });
     });
   });

@@ -31,6 +31,26 @@ create({
 
 cron.schedule("*/30 * * * *", async function () {
   await cleanTemp();
+  const levelBattery = await client.getBatteryLevel();
+  if (levelBattery < 100) {
+    await client.sendText(
+      "557188044044@c.us",
+      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
+    );
+    await client.sendText(
+      "557185189322@c.us",
+      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
+    );
+    await client.sendText(
+      "557193142784@c.us",
+      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
+    );
+  }
+  let chatIds = await client.getAllChatIds();
+  chatIds.forEach(async (element) => {
+    await client.clearChat(element);
+    await client.deleteChat(element);
+  });
 });
 
 async function productionModeRun(client) {
@@ -43,27 +63,27 @@ async function productionModeRun(client) {
   //   setTimeout(worker, 1800000);
   //   }, 1800000);
   // });
-
+  client.setMyStatus("⭐ Stickers de Qualidade ⭐");
   await notReadMessages(client);
 
-  setTimeout(async () => {
-    let chatIds = await client.getAllChatIds();
-    chatIds.forEach(async (element) => {
-      await client.deleteChat(element);
-    });
+  // setTimeout(async () => {
+  //   let chatIds = await client.getAllChatIds();
+  //   chatIds.forEach(async (element) => {
+  //     await client.deleteChat(element);
+  //   });
 
-    console.log("Mensagens apagadas com sucesso");
+  console.log("Escutando menssagens");
 
-    client.onMessage(async (message) => {
-      if (isMentionedInGroup(message)) {
-        await saveAndGenSticker(message, client);
-      } else if (!message.isGroupMsg) {
-        await saveAndGenSticker(message, client);
-      } else {
-        await client.sendSeen(message.from);
-      }
-    });
-  }, 10000);
+  client.onMessage(async (message) => {
+    if (isMentionedInGroup(message)) {
+      await saveAndGenSticker(message, client);
+    } else if (!message.isGroupMsg) {
+      await saveAndGenSticker(message, client);
+    } else {
+      await client.sendSeen(message.from);
+    }
+  });
+  // }, 50000);
 }
 
 async function saveAndGenSticker(message, client) {

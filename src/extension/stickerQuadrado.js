@@ -25,7 +25,7 @@ async function stickerQuadrado(decryptFile, file, client, message, user) {
 
       let sizeGif = await formatBytes(info.size);
 
-      await sendMessageDatabase(user, sizeGif);
+      await sendMessageDatabase(user, sizeGif, "Quadrado");
 
       await sendMessagesDefault(client, message);
 
