@@ -31,26 +31,11 @@ create({
 
 cron.schedule("*/30 * * * *", async function () {
   await cleanTemp();
-  const levelBattery = await client.getBatteryLevel();
-  if (levelBattery < 100) {
-    await client.sendText(
-      "557188044044@c.us",
-      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
-    );
-    await client.sendText(
-      "557185189322@c.us",
-      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
-    );
-    await client.sendText(
-      "557193142784@c.us",
-      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
-    );
-  }
-  let chatIds = await client.getAllChatIds();
-  chatIds.forEach(async (element) => {
-    await client.clearChat(element);
-    await client.deleteChat(element);
-  });
+  // let chatIds = await client.getAllChatIds();
+  // chatIds.forEach(async (element) => {
+  //   await client.clearChat(element);
+  //   await client.deleteChat(element);
+  // });
 });
 
 async function productionModeRun(client) {
@@ -71,6 +56,23 @@ async function productionModeRun(client) {
   //   chatIds.forEach(async (element) => {
   //     await client.deleteChat(element);
   //   });
+
+  const levelBattery = await client.getBatteryLevel();
+  console.log('Estado da bateria atual: ',levelBattery);
+  if (levelBattery < 100) {
+    await client.sendText(
+      "557188044044@c.us",
+      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
+    );
+    await client.sendText(
+      "557185189322@c.us",
+      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
+    );
+    await client.sendText(
+      "557193142784@c.us",
+      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
+    );
+  }
 
   console.log("Escutando menssagens");
 
