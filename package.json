@@ -18,11 +18,12 @@
     "fluent-ffmpeg": "^2.1.2",
     "giflossy": "^3.0.41",
     "gifsicle": "^5.1.0",
+    "json-stringify-safe": "^5.0.1",
     "mongoose": "^5.11.17",
     "node-cron": "^2.0.3",
+    "p-queue": "^6.6.2",
     "replace-color": "^2.3.0",
     "rimraf": "^3.0.2",
-    "p-queue": "^6.6.2",
     "sharp": "^0.26.3",
     "text2png": "git://github.com/SergioMatheus/text2png"
   },

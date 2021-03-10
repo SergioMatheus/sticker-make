@@ -8,6 +8,8 @@ const { stickerCircular } = require("./stickerCircular");
 const { stickerQuadrado } = require("./stickerQuadrado");
 const { stickerAnimate, makeGif } = require("./makeGif");
 const { stickerText } = require("./stickerText");
+const  publishToQueue = require("../services/rabbitMQService");
+
 
 async function genSticker(client, message, user) {
   //fazer try catch do decriptMedia
@@ -34,6 +36,8 @@ async function genSticker(client, message, user) {
   if (TRANSLUCENT_STICKER) {
     await stickerTransparent(message, client);
   } else if (TRANSLUCENT_STICKER_WITHOUT_URL) {
+
+
     await stickerTransparentWithoutUrl(
       decryptFile,
       file,
@@ -41,10 +45,20 @@ async function genSticker(client, message, user) {
       message,
       user
     );
+
   } else if (message.type === "image") {
     if (validateCircular(message)) {
       await stickerCircular(decryptFile, file, client, message, user);
     } else {
+      const payload = {
+        decryptFile,
+        file,
+        client,
+        message,
+        user
+      }
+
+      await publishToQueue("static_image", payload);
       await stickerQuadrado(decryptFile, file, client, message, user);
     }
   } else if (message.type === "video") {
