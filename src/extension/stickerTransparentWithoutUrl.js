@@ -58,7 +58,11 @@ async function stickerTransparentWithoutUrl(
             const fileBase64PNG = await base64_encode(filePNG);
 
             await client
-              .sendImageAsSticker(message.from, fileBase64PNG)
+              .sendImageAsSticker(message.from, fileBase64PNG, {
+                author: "@autofigurinhas",
+                pack:
+                  "Stickers Automáticos?\nWPP: 71 98400-3585",
+              })
               .then((result) => {
                 console.log("Mensagem enviada para: ", result);
               })

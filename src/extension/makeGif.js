@@ -124,8 +124,13 @@ async function stickerAnimate(message, id, client, makeGif, user) {
           await sendMessagesDefault(client, message);
 
           const fileBase64 = await base64_encode(statistic.path_out_new);
+
           await client
-            .sendRawWebpAsSticker(message.from, fileBase64)
+            .sendImageAsSticker(message.from, fileBase64, {
+              author: "@autofigurinhas",
+              pack:
+                "Stickers Automáticos?\nWPP: 71 98400-3585",
+            })
             .then((result) => {
               console.log("Mensagem enviada para: ", result);
             })
@@ -145,7 +150,7 @@ async function stickerAnimate(message, id, client, makeGif, user) {
           );
         }
 
-        await sendMessageDatabase(user, sizeGif,"Gif");
+        await sendMessageDatabase(user, sizeGif, "Gif");
       });
     });
   });

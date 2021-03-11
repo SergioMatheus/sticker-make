@@ -12,7 +12,10 @@ async function stickerTransparent(message, client) {
   await sendMessagesDefault(client, message);
 
   await client
-    .sendStickerfromUrl(message.from, url)
+    .sendStickerfromUrl(message.from, url, {
+      author: "@autofigurinhas",
+      pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
+    })
     .then((result) => {
       console.log("Mensagem enviada para: ", result);
     })
