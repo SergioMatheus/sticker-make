@@ -32,7 +32,7 @@ async function stickerQuadrado(decryptFile, file, client, message, user) {
       const fileBase64 = await base64_encode(file);
 
       await client
-        .sendRawWebpAsSticker(message.from, fileBase64)
+        .sendImageAsSticker(message.from, fileBase64)
         .then((result) => {
           console.log("Mensagem enviada para: ", result);
         })
