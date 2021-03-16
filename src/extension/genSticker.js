@@ -8,13 +8,14 @@ const { stickerCircular } = require("./stickerCircular");
 const { stickerQuadrado } = require("./stickerQuadrado");
 const { stickerAnimate, makeGif } = require("./makeGif");
 const { stickerText } = require("./stickerText");
+var amqp = require("amqplib/callback_api");
 
 async function genSticker(client, message, user) {
   //fazer try catch do decriptMedia
   const id = crypto.randomBytes(16).toString("hex");
   const file = `./temp/${id}.png`;
 
-  if (message && message.body && message.body.includes("text")) {
+  if (message && message.body && (message.body.includes("text")|| message.body.includes("Text"))) {
     return await generateTextAndCallSticker(message, file, client, user);
   }
 
@@ -61,15 +62,16 @@ async function generateTextAndCallSticker(message, file, client, user) {
 async function messageNotSticker(client, message) {
   await client.sendText(
     message.from,
-    "*https://bit.ly/3r24BDe <- Ajude-nos a batizar o bot caso esteja gostando do nosso serviço!*"
-  );
-  await client.sendText(
-    message.from,
-    "*Junte-se ao Discord do Sticker Maker, https://discord.gg/XrXurhVxRw, para poder enviar suas sugestôes e reportar problemas*"
-  );
-  await client.sendText(
-    message.from,
-    "*Envie-me no chat privado ou marque no grupo com uma imagem ou gif de ate 15 segundos, para receber de volta em forma de figurinha*"
+    "*CATALOGO DE FUNÇÕES 💡 :* \n"+
+
+    "📍Figurinha: Envie qualquer arquivo de imagem e receba uma figurinha. \n"+
+    "OBS: O bot também funciona em grupos, basta enviar a imagem e marcar @Bot. \n"+
+    "📍Text: Escreva 'Text' + uma frase, e receba uma figurinha escrita. \n"+
+     "OBS: Usando \n ao final das palavras, o texto é quebrado em duas linhas.\n"+
+    "📍Circular: Escreva 'circular' na imagem em questão, e receba sua figurinha no formato redondo. \n"+
+    "OBS: Esse comando funciona melhor se as imagens estiverem quadradas.\n"+
+    "📍Transparente: Escreva 'transparente' na imagem em questão, e receba figurinhas com fundo transparente. \n"+
+    "OBS: Esse comando só funciona se a imagem original já estiver com fundo apagado. \n"
   );
 }
 

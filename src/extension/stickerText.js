@@ -12,7 +12,12 @@ const queue = new PQueue({ concurrency: 1 });
 async function stickerText(file, client, message, user) {
   try {
     await queue.add(async () => {
-      let textoPng = message.body.replace("text ", "");
+      let textoPng;
+      if (message.body.includes("text")) {
+        textoPng = message.body.replace("text ", "");
+      } else {
+        textoPng = message.body.replace("Text ", "");
+      }
       if (message.isGroupMsg) {
         textoPng = textoPng.replace("@557184003585", "");
       }
@@ -53,11 +58,10 @@ async function stickerText(file, client, message, user) {
           await client
             .sendImageAsSticker(message.from, fileBase64PNG, {
               author: "@autofigurinhas",
-              pack:
-                "Stickers Automáticos?\nWPP: 71 98400-3585",
+              pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
             })
             .then((result) => {
-              console.log("Mensagem enviada para: ", result);
+              console.log("Mensagem de Texto enviada para: ", result);
             })
             .catch(async (erro) => {
               console.error("Error when sending: ", erro);

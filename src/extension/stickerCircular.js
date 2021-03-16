@@ -49,7 +49,7 @@ async function stickerCircular(decryptFile, file, client, message, user) {
             "Stickers Automáticos?\nWPP: 71 98400-3585",
         })
         .then((result) => {
-          console.log("Mensagem enviada para: ", result);
+          console.log("Mensagem Circular enviada para: ", result);
         })
         .catch(async (erro) => {
           console.error("Error when sending: ", erro);

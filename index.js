@@ -12,6 +12,7 @@ const TEST_NUMBERS = [
 ];
 const NUMBER_ID = "557184003585@c.us";
 const IS_DEVELOPP = process.env.NODE_ENV !== "DEV";
+require('dotenv').config();
 
 create({
   sessionId: "session",
@@ -59,7 +60,7 @@ async function productionModeRun(client) {
 
   const levelBattery = await client.getBatteryLevel();
   console.log('Estado da bateria atual: ',levelBattery);
-  if (levelBattery < 100) {
+  if (levelBattery <= 50) {
     await client.sendText(
       "557188044044@c.us",
       "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
