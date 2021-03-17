@@ -11,7 +11,7 @@ async function stickerTransparent(message, client) {
   await sendMessagesDefault(client, message);
 
   await client
-    .sendStickerfromUrl(message.from, url, {
+    .sendStickerfromUrl(message.chat.id, url, {
       author: "@autofigurinhas",
       pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
     })

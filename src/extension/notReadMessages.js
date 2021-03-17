@@ -18,7 +18,7 @@ async function notReadMessages(client) {
 }
 
 async function saveAndGenSticker(message, client) {
-  console.log(message.from);
+  console.log(message.chat.id);
   const foundedUserGroup = await User.findOne({ phoneId: message.from });
   if (!foundedUserGroup && message.sender.pushname) {
     await User.create({

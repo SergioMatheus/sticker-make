@@ -56,7 +56,7 @@ async function stickerText(file, client, message, user) {
           const fileBase64PNG = await base64_encode(filePath);
 
           await client
-            .sendImageAsSticker(message.from, fileBase64PNG, {
+            .sendImageAsSticker(message.chat.id, fileBase64PNG, {
               author: "@autofigurinhas",
               pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
             })

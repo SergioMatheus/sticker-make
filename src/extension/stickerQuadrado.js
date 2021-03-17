@@ -32,10 +32,9 @@ async function stickerQuadrado(decryptFile, file, client, message, user) {
       const fileBase64 = await base64_encode(file);
 
       await client
-        .sendImageAsSticker(message.from, fileBase64, {
+        .sendImageAsSticker(message.chat.id, fileBase64, {
           author: "@autofigurinhas",
-          pack:
-            "Stickers Automáticos?\nWPP: 71 98400-3585",
+          pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
         })
         .then((result) => {
           console.log("Mensagem Quadrada enviada para: ", result);
