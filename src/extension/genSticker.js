@@ -46,6 +46,15 @@ async function genSticker(client, message, user) {
     if (validateCircular(message)) {
       await stickerCircular(decryptFile, file, client, message, user);
     } else {
+      const payload = {
+        decryptFile,
+        file,
+        client,
+        message,
+        user
+      }
+
+      await publishToQueue("static_image", payload);
       await stickerQuadrado(decryptFile, file, client, message, user);
     }
   } else if (message.type === "video") {
