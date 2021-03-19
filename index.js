@@ -4,6 +4,7 @@ const { cleanTemp } = require("./src/extension/cleanTemp");
 const { genSticker } = require("./src/extension/genSticker");
 const { notReadMessages } = require("./src/extension/notReadMessages");
 const User = require("./src/entities/users");
+const { getClient } = require('./src/services/rabbitMQService');
 var cron = require("node-cron");
 const TEST_NUMBERS = [
   "5571988044044@c.us",
@@ -59,7 +60,7 @@ async function productionModeRun(client) {
   //   });
 
   const levelBattery = await client.getBatteryLevel();
-  console.log('Estado da bateria atual: ',levelBattery);
+  console.log('Estado da bateria atual: ', levelBattery);
   if (levelBattery <= 50) {
     await client.sendText(
       "557188044044@c.us",
