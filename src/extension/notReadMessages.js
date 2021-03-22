@@ -4,17 +4,19 @@ const { genSticker } = require("./genSticker");
 const NUMBER_ID = "14058170633@c.us";
 
 async function notReadMessages(client) {
-  const messages = await client.getAllUnreadMessages();
-  messages.forEach(async (message) => {
-    if (isMentionedInGroup(message)) {
-      saveAndGenSticker(message, client);
-    } else if (!message.isGroupMsg) {
-      saveAndGenSticker(message, client);
-    } else {
+  let messages = await client.getAllUnreadMessages();
+  if (messages.length > 0) {
+    messages.forEach(async (message) => {
+      if (isMentionedInGroup(message)) {
+        saveAndGenSticker(message, client);
+      } else if (!message.isGroupMsg) {
+        saveAndGenSticker(message, client);
+      } else {
+        await client.sendSeen(message.from);
+      }
       await client.sendSeen(message.from);
-    }
-    await client.sendSeen(message.from);
-  });
+    });
+  }
 }
 
 async function saveAndGenSticker(message, client) {

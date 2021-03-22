@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@open-wa/wa-automate": "^3.9.6",
+    "@open-wa/wa-automate": "^3.9.13",
     "amqplib": "^0.7.0",
     "compress-images": "git://github.com/SergioMatheus/compress-images",
     "cross-env": "^7.0.3",
@@ -19,7 +19,8 @@
     "fluent-ffmpeg": "^2.1.2",
     "giflossy": "^3.0.41",
     "gifsicle": "^5.1.0",
-    "mongoose": "^5.11.17",
+    "mongodb": "^3.6.5",
+    "mongoose": "^5.12.1",
     "node-cron": "^2.0.3",
     "p-queue": "^6.6.2",
     "replace-color": "^2.3.0",

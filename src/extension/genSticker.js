@@ -67,7 +67,7 @@ async function messageNotSticker(client, message) {
     "📍Figurinha: Envie qualquer arquivo de imagem e receba uma figurinha. \n"+
     "OBS: O bot também funciona em grupos, basta enviar a imagem e marcar @Bot. \n"+
     "📍Text: Escreva 'Text' + uma frase, e receba uma figurinha escrita. \n"+
-     "OBS: Usando \n ao final das palavras, o texto é quebrado em duas linhas.\n"+
+     "OBS: Usando \\n ao final das palavras, o texto é quebrado em duas linhas.\n"+
     "📍Circular: Escreva 'circular' na imagem em questão, e receba sua figurinha no formato redondo. \n"+
     "OBS: Esse comando funciona melhor se as imagens estiverem quadradas.\n"+
     "📍Transparente: Escreva 'transparente' na imagem em questão, e receba figurinhas com fundo transparente. \n"+

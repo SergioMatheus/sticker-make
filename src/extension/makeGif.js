@@ -117,7 +117,7 @@ async function stickerAnimate(message, id, client, makeGif, user) {
         if (
           statistic &&
           statistic.size_output &&
-          statistic.size_output <= 940000
+          statistic.size_output <= 920000
         ) {
           sizeGif = await formatBytes(statistic.size_output);
 

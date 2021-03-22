@@ -82,9 +82,10 @@ async function productionModeRun(client) {
       await saveAndGenSticker(message, client);
     } else if (!message.isGroupMsg) {
       await saveAndGenSticker(message, client);
-    } else {
-      await client.sendSeen(message.from);
     }
+    //  else {
+    //   await client.sendSeen(message.from);
+    // }
   });
   // }, 50000);
 }
