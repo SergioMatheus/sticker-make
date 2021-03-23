@@ -46,7 +46,13 @@ async function genSticker(client, message, user) {
 
   } else if (message.type === "image") {
     if (validateCircular(message)) {
-      await stickerCircular(decryptFile, file, client, message, user);
+      const payload = {
+        decryptFile,
+        message,
+      }
+  
+      await publishToQueue('circle_image', payload)
+      // await stickerCircular(decryptFile, file, client, message, user);
     } else {
       const payload = {
         decryptFile,
