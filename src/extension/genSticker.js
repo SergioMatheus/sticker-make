@@ -35,14 +35,14 @@ async function genSticker(client, message, user) {
     message.caption && message.caption.toUpperCase().includes("TRANSPARENTE");
 
   if (TRANSLUCENT_STICKER) {
-    await stickerTransparent(message, client);
+    return await stickerTransparent(message, client);
   } else if (TRANSLUCENT_STICKER_WITHOUT_URL) {
     const payload = {
       decryptFile,
       message,
     }
 
-    await publishToQueue('translucent_image', payload)
+    return await publishToQueue('translucent_image', payload)
     
 
   } else if (message.type === "image") {
@@ -52,7 +52,7 @@ async function genSticker(client, message, user) {
         message,
       }
   
-      await publishToQueue('circle_image', payload)
+      return await publishToQueue('circular_image', payload)
       // await stickerCircular(decryptFile, file, client, message, user);
     } else {
       const payload = {
@@ -60,17 +60,11 @@ async function genSticker(client, message, user) {
         message,
       }
   
-      await publishToQueue("square_image", payload);
+      return await publishToQueue("square_image", payload);
       // await stickerQuadrado(decryptFile, file, client, message, user);
     }
   } else if (message.type === "video") {
-    await stickerAnimate(message, id, client, makeGif, user);
-  }
-}
-
-async function generateTextAndCallSticker(message, file, client, user) {
-  if (message.type === "chat") {
-    return await stickerText(file, client, message, user);
+    return await stickerAnimate(message, id, client, makeGif, user);
   }
 }
 

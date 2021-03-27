@@ -47,7 +47,7 @@ async function sendImageWhatsApp({ message_from, image64 }) {
       pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
     })
     .then((result) => {
-      console.log(`Mensagem Quadrada enviada para: ${message_from}`);
+      console.log(`Mensagem enviada para: ${message_from}`);
     })
     .catch(async (erro) => {
       console.error("Error when sending: ");
