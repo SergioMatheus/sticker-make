@@ -53,16 +53,3 @@ async function sendImageWhatsApp({ message_from, image64 }) {
       console.error("Error when sending: ");
     });
 }
-
-// var amqp = require("amqplib/callback_api");
-// require('dotenv').config();
-
-// process.env.CONN_URL = 'amqps://famkfurb:QM2wh1r-STWKRNCq9nV_dda_OFjDiyUI@fox.rmq.cloudamqp.com/famkfurb'
-
-// console.log(process.env.CONN_URL);
-// amqp.connect(process.env.CONN_URL, function (err, conn) {
-//   conn.createChannel(function (err, ch) {
-//     ch.sendToQueue('square_image', new Buffer.from(msg));
-//     console.log('Mensagem Produzida!')
-//   });
-// });

@@ -1,13 +1,7 @@
 const { decryptMedia } = require("@open-wa/wa-automate");
 const crypto = require("crypto");
 const { stickerTransparent } = require("./stickerTransparent");
-const {
-  stickerTransparentWithoutUrl,
-} = require("./stickerTransparentWithoutUrl");
-const { stickerCircular } = require("./stickerCircular");
-const { stickerQuadrado } = require("./stickerQuadrado");
 const { stickerAnimate, makeGif } = require("./makeGif");
-const { stickerText } = require("./stickerText");
 const { publishToQueue, getClient } = require('../services/rabbitMQService');
 
 async function genSticker(client, message, user) {
@@ -17,7 +11,14 @@ async function genSticker(client, message, user) {
   const file = `./temp/${id}.png`;
 
   if (message && message.body && (message.body.includes("text") || message.body.includes("Text"))) {
-    return await generateTextAndCallSticker(message, file, client, user);
+    if (message.type == 'chat') {
+      const payload = {
+        message
+      }
+  
+     return await publishToQueue('text_image', payload)
+    }
+    // return await generateTextAndCallSticker(message, file, client, user);
   }
 
   if (message.type === "chat") {

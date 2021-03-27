@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@open-wa/wa-automate": "^3.9.6",
+    "@open-wa/wa-automate": "^3.10.1",
     "amqplib": "^0.7.0",
     "compress-images": "git://github.com/SergioMatheus/compress-images",
     "cross-env": "^7.0.3",
@@ -20,12 +20,8 @@
     "giflossy": "^3.0.41",
     "gifsicle": "^5.1.0",
     "mongoose": "^5.11.17",
-    "node-cron": "^2.0.3",
-    "p-queue": "^6.6.2",
-    "replace-color": "^2.3.0",
-    "rimraf": "^3.0.2",
-    "sharp": "^0.27.0",
-    "text2png": "git://github.com/SergioMatheus/text2png"
+    "node-cron": "^3.0.0",
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
