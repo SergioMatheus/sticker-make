@@ -13,7 +13,6 @@ const TEST_NUMBERS = [
 ];
 const NUMBER_ID = "557184003585@c.us";
 const IS_DEVELOPP = process.env.NODE_ENV !== "DEV";
-require('dotenv').config();
 
 create({
   sessionId: "session",
@@ -33,48 +32,29 @@ create({
 
 cron.schedule("*/30 * * * *", async function () {
   await cleanTemp();
-  // let chatIds = await client.getAllChatIds();
-  // chatIds.forEach(async (element) => {
-  //   await client.clearChat(element);
-  //   await client.deleteChat(element);
-  // });
 });
 
 async function productionModeRun(client) {
-  // pm2.connect(function(err) {
-  //   if (err) throw err;
 
-  // setTimeout(function worker() {
-  //   console.log("Restarting app StickerMake");
-  //   pm2.restart('app', function() {});
-  //   setTimeout(worker, 1800000);
-  //   }, 1800000);
-  // });
   client.setMyStatus("⭐ Stickers de Qualidade ⭐");
   await notReadMessages(client);
 
-  // setTimeout(async () => {
-  //   let chatIds = await client.getAllChatIds();
-  //   chatIds.forEach(async (element) => {
-  //     await client.deleteChat(element);
-  //   });
-
   const levelBattery = await client.getBatteryLevel();
   console.log('Estado da bateria atual: ', levelBattery);
-  // if (levelBattery <= 50) {
-  //   await client.sendText(
-  //     "557188044044@c.us",
-  //     "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
-  //   );
-  //   await client.sendText(
-  //     "557185189322@c.us",
-  //     "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
-  //   );
-  //   await client.sendText(
-  //     "557193142784@c.us",
-  //     "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
-  //   );
-  // }
+  if (levelBattery <= 50) {
+    await client.sendText(
+      "557188044044@c.us",
+      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
+    );
+    await client.sendText(
+      "557185189322@c.us",
+      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
+    );
+    await client.sendText(
+      "557193142784@c.us",
+      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
+    );
+  }
 
   console.log("Escutando menssagens");
 

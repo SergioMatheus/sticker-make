@@ -5,7 +5,6 @@ const { stickerAnimate, makeGif } = require("./makeGif");
 const { publishToQueue, getClient } = require('../services/rabbitMQService');
 
 async function genSticker(client, message, user) {
-  //fazer try catch do decriptMedia
   getClient(client);
   const id = crypto.randomBytes(16).toString("hex");
   const file = `./temp/${id}.png`;
