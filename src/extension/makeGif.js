@@ -125,22 +125,29 @@ async function stickerAnimate(message, id, client, makeGif, user) {
 
           const fileBase64 = await base64_encode(statistic.path_out_new);
 
+          let envioMensagem = false;
+
           await client
             .sendImageAsSticker(message.chat.id, fileBase64, {
               author: "@autofigurinhas",
-              pack:
-                "Stickers Automáticos?\nWPP: 71 98400-3585",
+              pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
             })
             .then((result) => {
-              console.log("Mensagem Animada enviada para: ", result);
-            })
-            .catch(async (erro) => {
-              await client.sendText(
-                message.from,
-                "💀 *A imagem ou video ou gif enviada nao foi possivel converter em sticker, tente novamente* 💀"
-              );
-              console.error("Error ao enviar a mensagem: ", erro);
+              if (result == false) {
+                envioMensagem = true;
+              }
+              console.log("Mensagem Circular enviada para: ", result);
             });
+          if (envioMensagem) {
+            await client
+              .sendImageAsSticker(message.from, fileBase64, {
+                author: "@autofigurinhas",
+                pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
+              })
+              .then((result) => {
+                console.log("Mensagem Circular enviada para: ", result);
+              });
+          }
         } else {
           sizeGif = await formatBytes(statistic.size_output);
           await client.sendText(

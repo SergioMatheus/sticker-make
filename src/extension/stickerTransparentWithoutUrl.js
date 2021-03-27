@@ -57,20 +57,29 @@ async function stickerTransparentWithoutUrl(
 
             const fileBase64PNG = await base64_encode(filePNG);
 
+            let envioMensagem = false;
+
             await client
               .sendImageAsSticker(message.chat.id, fileBase64PNG, {
                 author: "@autofigurinhas",
                 pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
               })
               .then((result) => {
-                console.log(
-                  "Mensagem Transparente sem url enviada para: ",
-                  result
-                );
-              })
-              .catch(async (erro) => {
-                console.error("Error when sending: ", erro);
+                if (result == false) {
+                  envioMensagem = true;
+                }
+                console.log("Mensagem Circular enviada para: ", result);
               });
+            if (envioMensagem) {
+              await client
+                .sendImageAsSticker(message.from, fileBase64PNG, {
+                  author: "@autofigurinhas",
+                  pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
+                })
+                .then((result) => {
+                  console.log("Mensagem Circular enviada para: ", result);
+                });
+            }
           });
         })
         .catch((err) => {

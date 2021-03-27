@@ -36,24 +36,35 @@ async function stickerCircular(decryptFile, file, client, message, user) {
 
       let sizeGif = await formatBytes(info.size);
 
-      await sendMessageDatabase(user, sizeGif,"Circular");
+      await sendMessageDatabase(user, sizeGif, "Circular");
 
       await sendMessagesDefault(client, message);
 
       const fileBase64 = await base64_encode(file);
 
+      let envioMensagem = false;
+
       await client
         .sendImageAsSticker(message.chat.id, fileBase64, {
           author: "@autofigurinhas",
-          pack:
-            "Stickers Automáticos?\nWPP: 71 98400-3585",
+          pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
         })
         .then((result) => {
+          if (result == false) {
+            envioMensagem = true;
+          }
           console.log("Mensagem Circular enviada para: ", result);
-        })
-        .catch(async (erro) => {
-          console.error("Error when sending: ", erro);
         });
+      if (envioMensagem) {
+        await client
+          .sendImageAsSticker(message.from, fileBase64, {
+            author: "@autofigurinhas",
+            pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
+          })
+          .then((result) => {
+            console.log("Mensagem Circular enviada para: ", result);
+          });
+      }
     })
     .catch(async (err) => {
       await client.reply(
