@@ -11,9 +11,6 @@
   "dependencies": {
     "@open-wa/wa-automate": "^3.10.1",
     "amqplib": "^0.7.0",
-    "compress-images": "git://github.com/SergioMatheus/compress-images",
-    "ffmpeg-static": "^4.2.7",
-    "fluent-ffmpeg": "^2.1.2",
     "giflossy": "^3.0.41",
     "gifsicle": "^5.1.0",
     "mongoose": "^5.11.17",

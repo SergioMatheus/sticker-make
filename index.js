@@ -41,20 +41,20 @@ async function productionModeRun(client) {
 
   const levelBattery = await client.getBatteryLevel();
   console.log('Estado da bateria atual: ', levelBattery);
-  if (levelBattery <= 50) {
-    await client.sendText(
-      "557188044044@c.us",
-      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
-    );
-    await client.sendText(
-      "557185189322@c.us",
-      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
-    );
-    await client.sendText(
-      "557193142784@c.us",
-      "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
-    );
-  }
+  // if (levelBattery <= 50) {
+  //   await client.sendText(
+  //     "557188044044@c.us",
+  //     "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
+  //   );
+  //   await client.sendText(
+  //     "557185189322@c.us",
+  //     "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
+  //   );
+  //   await client.sendText(
+  //     "557193142784@c.us",
+  //     "*O Celular do bot está descarregando, verifique o que aconteceu na tomada.*"
+  //   );
+  // }
 
   console.log("Escutando menssagens");
 

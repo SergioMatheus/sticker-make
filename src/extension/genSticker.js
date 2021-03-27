@@ -63,7 +63,7 @@ async function genSticker(client, message, user) {
       // await stickerQuadrado(decryptFile, file, client, message, user);
     }
   } else if (message.type === "video") {
-    return await stickerAnimate(message, id, client, makeGif, user);
+    return await stickerAnimate(message, id, client, user);
   }
 }
 
