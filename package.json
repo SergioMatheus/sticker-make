@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@open-wa/wa-automate": "^3.10.1",
+    "@open-wa/wa-automate": "latest",
     "amqplib": "^0.7.0",
     "mongoose": "^5.11.17",
     "rimraf": "^3.0.2"
