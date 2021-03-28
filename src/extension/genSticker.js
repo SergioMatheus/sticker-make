@@ -6,7 +6,7 @@ const {
 } = require("./stickerTransparentWithoutUrl");
 const { stickerCircular } = require("./stickerCircular");
 const { stickerQuadrado } = require("./stickerQuadrado");
-const { stickerAnimate, makeGif } = require("./makeGif");
+const { stickerAnimate, makeGif } = require("./stickerAnimate");
 const { stickerText } = require("./stickerText");
 var amqp = require("amqplib/callback_api");
 
@@ -49,7 +49,7 @@ async function genSticker(client, message, user) {
       await stickerQuadrado(decryptFile, file, client, message, user);
     }
   } else if (message.type === "video") {
-    await stickerAnimate(message, id, client, makeGif, user);
+    await stickerAnimate(message, client, makeGif, user);
   }
 }
 
