@@ -13,7 +13,7 @@ exports.getClient = (cl) => {
 amqp.connect(CONNECTION, function (err, conn) {
   conn.createChannel(function (err, channel) {
     ch = channel;
-    channel.consume(
+    ch.consume(
       "response_queue",
       async function (msg) {
         const response = JSON.parse(msg.content.toString());
