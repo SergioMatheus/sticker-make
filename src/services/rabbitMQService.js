@@ -27,6 +27,7 @@ amqp.connect(CONNECTION, function (err, conn) {
 });
 
 exports.publishToQueue = async (queueName, data) => {
+  console.log("Publicado na fila: ", queueName);
   const dataParsed = stringify(data);
   await ch.sendToQueue(queueName, new Buffer.from(dataParsed));
 };

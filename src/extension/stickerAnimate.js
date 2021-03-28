@@ -15,7 +15,7 @@ async function stickerAnimate(message, id, client, user) {
     .sendMp4AsSticker(
       message.chat.id,
       decryptFile,
-      { crop: true },
+      { crop: false },
       {
         author: "@autofigurinhas",
         pack: "Stickers Automáticos?\nWPP: 71 98400-3585",

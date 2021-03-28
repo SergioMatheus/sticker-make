@@ -1,7 +1,7 @@
 const { decryptMedia } = require("@open-wa/wa-automate");
 const crypto = require("crypto");
 const { stickerTransparent } = require("./stickerTransparent");
-const { stickerAnimate, makeGif } = require("./makeGif");
+const { stickerAnimate } = require("./stickerAnimate");
 const { publishToQueue, getClient } = require('../services/rabbitMQService');
 
 async function genSticker(client, message, user) {
