@@ -2,11 +2,10 @@
   "apps": [
     {
       "name": "stickermake",
-      "script": "node index.js",
+      "script": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 index.js",
       "instances": 1,
       "exec_mode": "fork",
       "watch": false,
-      "cron_restart": "*/59 * * * *",
       "autorestart": false,
       "log_date_format": "YYYY-MM-DD HH:mm"
     }
