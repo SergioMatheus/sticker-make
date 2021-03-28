@@ -17,6 +17,7 @@ create({
   authTimeout: 60, //wait only 60 seconds to get a connection with the host account device
   blockCrashLogs: true,
   disableSpins: true,
+  executablePath: '/opt/chromium/',
   headless: true,
   killProcessOnBrowserClose: true,
   hostNotificationLang: "PT_BR",
