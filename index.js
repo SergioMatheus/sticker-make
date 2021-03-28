@@ -18,7 +18,6 @@ create({
   blockCrashLogs: true,
   disableSpins: true,
   headless: true,
-  executablePath: '/opt/chromium/',
   killProcessOnBrowserClose: true,
   hostNotificationLang: "PT_BR",
   logConsole: false,
