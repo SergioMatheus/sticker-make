@@ -1,11 +1,9 @@
 const { create } = require("@open-wa/wa-automate");
 const fs = require("fs");
-const { cleanTemp } = require("./src/extension/cleanTemp");
 const { genSticker } = require("./src/extension/genSticker");
 const { notReadMessages } = require("./src/extension/notReadMessages");
 const User = require("./src/entities/users");
 const { getClient } = require('./src/services/rabbitMQService');
-var cron = require("node-cron");
 const TEST_NUMBERS = [
   "5571988044044@c.us",
   "557199145852@c.us",
@@ -30,10 +28,6 @@ create({
   qrTimeout: 0, //0 means it will wait forever for you to scan the qr code
 }).then((client) => {
   return IS_DEVELOPP ? productionModeRun(client) : developmentModeRun(client);
-});
-
-cron.schedule("*/30 * * * *", async function () {
-  await cleanTemp();
 });
 
 async function productionModeRun(client) {
