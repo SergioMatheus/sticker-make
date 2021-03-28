@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=prod && pm2 start ./src/config/config-pm2.json",
+    "start": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 index.js",
     "dev": "cross-env NODE_ENV=DEV nodemon --ignore session.data.json index.js"
   },
   "author": "",
