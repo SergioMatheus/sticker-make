@@ -16,7 +16,7 @@ async function stickerTransparent(message, client) {
       pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
     })
     .then((result) => {
-      console.log("Mensagem Transparente enviada para: ", result);
+      console.log("Mensagem Transparente enviada para: ", message.chat.id);
     })
     .catch(async (erro) => {
       console.error("Error when sending: ", erro);

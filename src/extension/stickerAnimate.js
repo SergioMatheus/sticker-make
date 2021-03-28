@@ -3,7 +3,7 @@ const { sendMessageDatabase } = require("./sendMessageDatabase");
 const { formatBytes } = require("./formatBytes");
 const { sendMessagesDefault } = require("./sendMessagesDefault");
 
-async function stickerAnimate(message, id, client, user) {
+async function stickerAnimate(message, client, user) {
   const decryptFile = await decryptMedia(message);
 
   let sizeGif = await formatBytes(decryptFile.toString().length);
@@ -22,7 +22,7 @@ async function stickerAnimate(message, id, client, user) {
       }
     )
     .then((result) => {
-      console.log("Mensagem enviada para: ", result);
+      console.log("Mensagem enviada para: ", message.chat.id);
     })
     .catch(async (erro) => {
       await client.sendText(
