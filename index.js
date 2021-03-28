@@ -20,6 +20,7 @@ create({
   blockCrashLogs: true,
   disableSpins: true,
   headless: true,
+  killProcessOnBrowserClose: true,
   hostNotificationLang: "PT_BR",
   logConsole: false,
   cacheEnabled: false,
