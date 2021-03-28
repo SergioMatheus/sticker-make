@@ -42,7 +42,7 @@ async function stickerQuadrado(decryptFile, file, client, message, user) {
           if (result == false) {
             envioMensagem = true;
           }
-          console.log("Mensagem Circular enviada para: ", result);
+          console.log("Mensagem Quadrado enviada para: ", result);
         });
       if (envioMensagem) {
         await client
@@ -51,7 +51,7 @@ async function stickerQuadrado(decryptFile, file, client, message, user) {
             pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
           })
           .then((result) => {
-            console.log("Mensagem Circular enviada para: ", result);
+            console.log("Mensagem Quadrado enviada para: ", result);
           });
       }
     })

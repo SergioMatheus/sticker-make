@@ -66,7 +66,7 @@ async function stickerText(file, client, message, user) {
               if (result == false) {
                 envioMensagem = true;
               }
-              console.log("Mensagem Circular enviada para: ", result);
+              console.log("Mensagem Texto enviada para: ", result);
             });
           if (envioMensagem) {
             await client
@@ -75,7 +75,7 @@ async function stickerText(file, client, message, user) {
                 pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
               })
               .then((result) => {
-                console.log("Mensagem Circular enviada para: ", result);
+                console.log("Mensagem Texto enviada para: ", result);
               });
           }
         })
