@@ -17,7 +17,6 @@ create({
   authTimeout: 60, //wait only 60 seconds to get a connection with the host account device
   blockCrashLogs: true,
   disableSpins: true,
-  executablePath: '/opt/chromium/',
   headless: true,
   killProcessOnBrowserClose: true,
   hostNotificationLang: "PT_BR",
@@ -59,8 +58,6 @@ async function productionModeRun(client) {
       await saveAndGenSticker(message, client);
     } else if (!message.isGroupMsg) {
       await saveAndGenSticker(message, client);
-    } else {
-      await client.sendSeen(message.from);
     }
   });
   // }, 50000);
