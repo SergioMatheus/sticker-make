@@ -31,8 +31,8 @@ create({
 
 async function productionModeRun(client) {
 
-  client.setMyStatus("⭐ Stickers de Qualidade ⭐");
-  await notReadMessages(client);
+  // client.setMyStatus("⭐ Stickers de Qualidade ⭐");
+  // await notReadMessages(client);
 
   const levelBattery = await client.getBatteryLevel();
   console.log('Estado da bateria atual: ', levelBattery);
