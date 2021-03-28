@@ -11,7 +11,7 @@ exports.getClient = (cl) => {
 };
 
 amqp.connect(CONNECTION, function (err, conn) {
-  conn.createChannel(function (err, channel) {
+  conn.createConfirmChannel(function (err, channel) {
     ch = channel;
     ch.consume(
       "response_queue",
@@ -27,9 +27,13 @@ amqp.connect(CONNECTION, function (err, conn) {
 });
 
 exports.publishToQueue = async (queueName, data) => {
-  console.log("Publicado na fila: ", queueName);
   const dataParsed = stringify(data);
-  await ch.sendToQueue(queueName, new Buffer.from(dataParsed));
+  await ch.sendToQueue(queueName, new Buffer.from(dataParsed), {}, (err, ok) => {
+    if (err){
+      console.log(Date.now(), 'sent')
+    }
+    console.log("Publicado na fila: ", queueName);
+})
 };
 
 process.on("exit", (code) => {
