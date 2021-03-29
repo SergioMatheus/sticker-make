@@ -3,11 +3,17 @@ const fs = require("fs");
 const { sendMessagesDefault } = require("./sendMessagesDefault");
 const { formatBytes } = require("./formatBytes");
 const { sendMessageDatabase } = require("./sendMessageDatabase");
+const { constants } = require("../entities/constants");
 var text2png = require("text2png");
 let filePath = "";
 const { default: PQueue } = require("p-queue");
 
 const queue = new PQueue({ concurrency: 1 });
+
+const signatureMethod = {
+  author: constants.IG,
+  pack:  constants.SIGN,
+}
 
 async function stickerText(file, client, message, user) {
   try {
@@ -19,7 +25,7 @@ async function stickerText(file, client, message, user) {
         textoPng = message.body.replace("Text ", "");
       }
       if (message.isGroupMsg) {
-        textoPng = textoPng.replace("@557184003585", "");
+        textoPng = textoPng.replace(`@${constants.NUMBER_RAW}`, "");
       }
       let bufferTextImg = await text2png(textoPng.replace("//n", "/n"), {
         font: "80px sans-serif",
@@ -58,10 +64,7 @@ async function stickerText(file, client, message, user) {
           let envioMensagem = false;
 
           await client
-            .sendImageAsSticker(message.chat.id, fileBase64PNG, {
-              author: "@autofigurinhas",
-              pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
-            })
+            .sendImageAsSticker(message.chat.id, fileBase64PNG, signatureMethod)
             .then((result) => {
               if (result == false) {
                 envioMensagem = true;
@@ -70,10 +73,7 @@ async function stickerText(file, client, message, user) {
             });
           if (envioMensagem) {
             await client
-              .sendImageAsSticker(message.from, fileBase64PNG, {
-                author: "@autofigurinhas",
-                pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
-              })
+              .sendImageAsSticker(message.from, fileBase64PNG, signatureMethod)
               .then((result) => {
                 console.log("Mensagem Texto enviada para: ", result);
               });
@@ -90,6 +90,7 @@ async function stickerText(file, client, message, user) {
     })();
   } catch (error) {}
 }
+
 exports.stickerText = stickerText;
 
 async function base64_encode(file) {

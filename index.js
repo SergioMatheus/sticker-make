@@ -4,14 +4,14 @@ const { cleanTemp } = require("./src/extension/cleanTemp");
 const { genSticker } = require("./src/extension/genSticker");
 const { notReadMessages } = require("./src/extension/notReadMessages");
 const User = require("./src/entities/users");
+const { constants, concatC_US } = require("./src/entities/constants");
 var cron = require("node-cron");
-const TEST_NUMBERS = [
-  "5571988044044@c.us",
-  "557199145852@c.us",
-  "557193142784@c.us",
-];
-const NUMBER_ID = "557184003585@c.us";
+
+const TEST_NUMBERS = constants.ADMINS;
+const NUMBER_ID = constants.concatC_US(constants.NUMBER_RAW);
+// const NUMBER_ID = constants.NUMBER_ID_DEV;
 const IS_DEVELOPP = process.env.NODE_ENV !== "DEV";
+
 require('dotenv').config();
 
 create({

@@ -1,15 +1,10 @@
+const { constants } = require("../entities/constants");
+
 async function sendMessagesDefault(client, message) {
   switch (message.from) {
-    case message.from.includes("557185189322@c.us"):
-      await client.sendContact(message.chat.id, "557184003585@c.us");
-      await client.sendText(
-        message.chat.id,
-        "*Para evitar problemas de envio, adicione o contato do bot*"
-      );
+    case constants.GROUP_1:
       break;
-    case "557188044044-1494204216@g.us":
-      break;
-    case "557193142784-1495902162@g.us":
+    case constants.GROUP_2:
       break;
     default:
       // break;
@@ -18,6 +13,12 @@ async function sendMessagesDefault(client, message) {
         "💀 *Vou ver e te aviso* 💀",
         message.id.toString()
       );
+      await client.sendLinkWithAutoPreview(
+        message.from,
+        "https://www.magazinevoce.com.br/magazineautofigurinhas/",
+        "*Nós ajude dando uma olhada nos produtos da nossa loja, todos os produtos são de lojas diretas do Magazine Luiza 100% verificadas.*",
+      );
+
       //     await client.sendText(
       //       message.from,
       //       "*O StickerMake é de uso gratuito e não temos responsabilidade pelos Stickers criados*"
