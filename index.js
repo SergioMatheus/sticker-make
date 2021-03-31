@@ -31,7 +31,7 @@ create({
 });
 
 cron.schedule("*/30 * * * *", async function () {
-  await cleanTemp();
+  // await cleanTemp();
   // let chatIds = await client.getAllChatIds();
   // chatIds.forEach(async (element) => {
   //   await client.clearChat(element);

@@ -73,6 +73,7 @@ async function stickerText(file, client, message, user) {
               .sendImageAsSticker(message.from, fileBase64PNG, {
                 author: "@autofigurinhas",
                 pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
+                discord: 154275562167205888
               })
               .then((result) => {
                 console.log("Mensagem Texto enviada para: ", result);

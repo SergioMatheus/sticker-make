@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 index.js",
+    "start": "cross-env NODE_ENV=prod && pm2 start ./src/config/config-pm2.json",
     "dev": "cross-env NODE_ENV=DEV nodemon --ignore session.data.json index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@open-wa/wa-automate": "^3.10.2",
+    "@open-wa/wa-automate": "^3.10.5",
     "amqplib": "^0.7.0",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",

@@ -63,6 +63,7 @@ async function stickerTransparentWithoutUrl(
               .sendImageAsSticker(message.chat.id, fileBase64PNG, {
                 author: "@autofigurinhas",
                 pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
+                discord: 154275562167205888
               })
               .then((result) => {
                 if (result == false) {
