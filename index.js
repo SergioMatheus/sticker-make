@@ -60,6 +60,8 @@ async function productionModeRun(client) {
 
   const levelBattery = await client.getBatteryLevel();
   console.log('Estado da bateria atual: ',levelBattery);
+
+    await cleanTemp();
   // if (levelBattery <= 50) {
   //   await client.sendText(
   //     "557188044044@c.us",
