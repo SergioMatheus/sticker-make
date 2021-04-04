@@ -4,7 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --max-old-space-size=128 --max-semi-space-size=1 index.js"
+    "start": "npm start"
+  },
+  "bin": "./src/bin/pkg-bin.js",
+  "pkg": {
+    "targets": [
+      "node12-linux-armv7"
+    ],
+    "outputPath": "dist"
   },
   "author": "",
   "license": "ISC",
