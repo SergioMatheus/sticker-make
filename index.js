@@ -3,7 +3,7 @@ const fs = require("fs");
 const { genSticker } = require("./src/extension/genSticker");
 const { notReadMessages } = require("./src/extension/notReadMessages");
 const User = require("./src/entities/users");
-const { getClient } = require('./src/services/rabbitMQService');
+const { getClient } = require("./src/services/rabbitMQService");
 const TEST_NUMBERS = [
   "5571988044044@c.us",
   "557199145852@c.us",
@@ -18,6 +18,7 @@ create({
   blockCrashLogs: true,
   disableSpins: true,
   headless: true,
+  executablePath: "/opt/chromium/",
   killProcessOnBrowserClose: true,
   hostNotificationLang: "PT_BR",
   logConsole: false,
@@ -30,12 +31,11 @@ create({
 });
 
 async function productionModeRun(client) {
-
   // client.setMyStatus("⭐ Stickers de Qualidade ⭐");
   // await notReadMessages(client);
 
   const levelBattery = await client.getBatteryLevel();
-  console.log('Estado da bateria atual: ', levelBattery);
+  console.log("Estado da bateria atual: ", levelBattery);
   // if (levelBattery <= 50) {
   //   await client.sendText(
   //     "557188044044@c.us",
