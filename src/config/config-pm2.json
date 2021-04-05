@@ -2,7 +2,7 @@
   "apps": [
     {
       "name": "stickermake",
-      "script": "node index.js",
+      "script": "node --max-old-space-size=128 --max-semi-space-size=1 index.js",
       "instances": 1,
       "exec_mode": "fork",
       "watch": false,
