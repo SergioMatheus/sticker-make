@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=prod && pm2 start ./src/config/config-pm2.json"
+    "start": "node --max-old-space-size=128 --max-semi-space-size=1 index.js"
   },
   "bin": "./src/bin/pkg-bin.js",
   "pkg": {
