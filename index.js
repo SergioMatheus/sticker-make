@@ -19,7 +19,7 @@ create({
   disableSpins: true,
   headless: true,
   executablePath: "/usr/bin/chromium-browser",
-  chromiumArgs: ["--no-sandbox"],
+  chromiumArgs: ["--no-sandbox","--process-per-site","--disk-cache-size=52428800"],
   killProcessOnBrowserClose: true,
   hostNotificationLang: "PT_BR",
   logConsole: false,
