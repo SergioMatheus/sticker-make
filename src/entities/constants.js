@@ -22,13 +22,16 @@ const systemConst = {
   GROUP_1: concatG_US('557188044044-1494204216'),
   GROUP_2: concatG_US('557193142784-1495902162'),
 
-  /* Signature and Social Medias */
-  SIGN: `${'Stickers Automáticos?\nWPP: ', maskWithOutCountry(NUMBER.RAW)}`,
+  /* Social Medias */
   IG: `@autofigurinhas`
 
 }
 
+const formatedConstants = {
 
+  /* Signature */
+  SIGN: `${'Stickers Automáticos?\nWPP: ', maskWithOutCountry(systemConst.NUMBER_RAW)}`,
 
+}
 
-exports.constants = systemConst, concatC_US, maskWithOutCountry;
+exports.constants = { systemConst, formatedConstants };

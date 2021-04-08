@@ -2,9 +2,9 @@ const { constants } = require("../entities/constants");
 
 async function sendMessagesDefault(client, message) {
   switch (message.from) {
-    case constants.GROUP_1:
+    case constants.systemConst.GROUP_1:
       break;
-    case constants.GROUP_2:
+    case constants.systemConst.GROUP_2:
       break;
     default:
       // break;

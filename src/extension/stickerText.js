@@ -11,8 +11,8 @@ const { default: PQueue } = require("p-queue");
 const queue = new PQueue({ concurrency: 1 });
 
 const signatureMethod = {
-  author: constants.IG,
-  pack:  constants.SIGN,
+  author: constants.systemConst.IG,
+  pack:  constants.formatedConstants.SIGN,
 }
 
 async function stickerText(file, client, message, user) {
@@ -25,7 +25,7 @@ async function stickerText(file, client, message, user) {
         textoPng = message.body.replace("Text ", "");
       }
       if (message.isGroupMsg) {
-        textoPng = textoPng.replace(`@${constants.NUMBER_RAW}`, "");
+        textoPng = textoPng.replace(`@${constants.systemConst.NUMBER_RAW}`, "");
       }
       let bufferTextImg = await text2png(textoPng.replace("//n", "/n"), {
         font: "80px sans-serif",

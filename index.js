@@ -7,9 +7,9 @@ const User = require("./src/entities/users");
 const { constants, concatC_US } = require("./src/entities/constants");
 var cron = require("node-cron");
 
-const TEST_NUMBERS = constants.ADMINS;
-const NUMBER_ID = constants.concatC_US(constants.NUMBER_RAW);
-// const NUMBER_ID = constants.NUMBER_ID_DEV;
+const TEST_NUMBERS = constants.systemConst.ADMINS;
+const NUMBER_ID = constants.concatC_US(constants.systemConst.NUMBER_RAW);
+// const NUMBER_ID = constants.systemConst.NUMBER_ID_DEV;
 const IS_DEVELOPP = process.env.NODE_ENV !== "DEV";
 
 require('dotenv').config();
@@ -139,4 +139,5 @@ function isMentionedInGroup(message) {
     message.mentionedJidList[0] == NUMBER_ID
   );
 }
+
 exports.isMentionedInGroup = isMentionedInGroup;
