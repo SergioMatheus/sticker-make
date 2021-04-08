@@ -37,6 +37,7 @@ async function stickerQuadrado(decryptFile, file, client, message, user) {
         .sendImageAsSticker(message.chat.id, fileBase64, {
           author: "@autofigurinhas",
           pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
+          discord: 154275562167205888,
         })
         .then((result) => {
           if (result == false) {
@@ -49,6 +50,7 @@ async function stickerQuadrado(decryptFile, file, client, message, user) {
           .sendImageAsSticker(message.from, fileBase64, {
             author: "@autofigurinhas",
             pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
+            discord: 154275562167205888,
           })
           .then((result) => {
             console.log("Mensagem Quadrado enviada para: ", result);

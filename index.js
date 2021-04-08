@@ -31,7 +31,7 @@ create({
 });
 
 cron.schedule("*/30 * * * *", async function () {
-  await cleanTemp();
+  // await cleanTemp();
   // let chatIds = await client.getAllChatIds();
   // chatIds.forEach(async (element) => {
   //   await client.clearChat(element);
@@ -60,6 +60,8 @@ async function productionModeRun(client) {
 
   const levelBattery = await client.getBatteryLevel();
   console.log('Estado da bateria atual: ',levelBattery);
+
+    await cleanTemp();
   // if (levelBattery <= 50) {
   //   await client.sendText(
   //     "557188044044@c.us",

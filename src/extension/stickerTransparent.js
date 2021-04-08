@@ -14,6 +14,7 @@ async function stickerTransparent(message, client) {
     .sendStickerfromUrl(message.chat.id, url, {
       author: "@autofigurinhas",
       pack: "Stickers Automáticos?\nWPP: 71 98400-3585",
+      discord: 154275562167205888
     })
     .then((result) => {
       console.log("Mensagem Transparente enviada para: ", result);
