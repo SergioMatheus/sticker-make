@@ -3,17 +3,12 @@ const fs = require("fs");
 const { sendMessagesDefault } = require("./sendMessagesDefault");
 const { formatBytes } = require("./formatBytes");
 const { sendMessageDatabase } = require("./sendMessageDatabase");
-const { constants } = require("../entities/constants");
+const { constants } = require("../entities/helper");
 var text2png = require("text2png");
 let filePath = "";
 const { default: PQueue } = require("p-queue");
 
 const queue = new PQueue({ concurrency: 1 });
-
-const signatureMethod = {
-  author: constants.systemConst.IG,
-  pack:  constants.formatedConstants.SIGN,
-}
 
 async function stickerText(file, client, message, user) {
   try {
@@ -64,18 +59,18 @@ async function stickerText(file, client, message, user) {
           let envioMensagem = false;
 
           await client
-            .sendImageAsSticker(message.chat.id, fileBase64PNG, signatureMethod)
+            .sendImageAsSticker(message.chat.id, fileBase64PNG, constants.formatedConstants.SIGN)
             .then((result) => {
               if (result == false) {
                 envioMensagem = true;
               }
-              console.log("Mensagem Texto enviada para: ", result);
+              console.log(constants.systemConst.textMessageSentTo, result);
             });
           if (envioMensagem) {
             await client
-              .sendImageAsSticker(message.from, fileBase64PNG, signatureMethod)
+              .sendImageAsSticker(message.from, fileBase64PNG, constants.formatedConstants.SIGN)
               .then((result) => {
-                console.log("Mensagem Texto enviada para: ", result);
+                console.log(constants.systemConst.textMessageSentTo, result);
               });
           }
         })

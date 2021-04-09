@@ -1,4 +1,3 @@
-
 const concatC_US = (number) => number.concat('@c.us');
 const concatG_US = (number) => number.concat('@g.us');
 const maskWithOutCountry = (number) => number.replace(/^(\d{2})(\d{2})(\d{5})(\d{4}).*/, '$1 $2 $3-$4');
@@ -15,7 +14,7 @@ const systemConst = {
   ],
 
   /* Bot number */
-  NUMBER_RAW: '5571984003585',
+  NUMBER_RAW: concatC_US('5571984003585'),
   NUMBER_ID_DEV: concatC_US('19156719392'),
 
   /* Group number */
@@ -23,15 +22,24 @@ const systemConst = {
   GROUP_2: concatG_US('557193142784-1495902162'),
 
   /* Social Medias */
-  IG: `@autofigurinhas`
+  IG: '@autofigurinhas',
+
+  /* Useful texts */
+  textMessageSentTo: 'Mensagem Texto enviada para: '
 
 }
 
 const formatedConstants = {
 
-  /* Signature */
-  SIGN: `${'Stickers Automáticos?\nWPP: ', maskWithOutCountry(systemConst.NUMBER_RAW)}`,
+  SIGNATURE_PACK: `${'Stickers Automáticos?\nWPP: '}${maskWithOutCountry(systemConst.NUMBER_RAW)}`,
 
 }
 
+formatedConstants.SIGN = {
+  author: systemConst.IG,
+  pack: formatedConstants.SIGN,
+  discord: 154275562167205888
+}
+
 exports.constants = { systemConst, formatedConstants };
+exports.helperFunctions = { concatC_US, concatG_US, maskWithOutCountry }

@@ -4,11 +4,11 @@ const { cleanTemp } = require("./src/extension/cleanTemp");
 const { genSticker } = require("./src/extension/genSticker");
 const { notReadMessages } = require("./src/extension/notReadMessages");
 const User = require("./src/entities/users");
-const { constants, concatC_US } = require("./src/entities/constants");
+const { constants } = require("./src/entities/helper");
 var cron = require("node-cron");
 
 const TEST_NUMBERS = constants.systemConst.ADMINS;
-const NUMBER_ID = constants.concatC_US(constants.systemConst.NUMBER_RAW);
+const NUMBER_ID = constants.systemConst.NUMBER_RAW;
 // const NUMBER_ID = constants.systemConst.NUMBER_ID_DEV;
 const IS_DEVELOPP = process.env.NODE_ENV !== "DEV";
 

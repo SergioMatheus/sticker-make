@@ -1,10 +1,13 @@
-const { constants } = require("../entities/constants");
+const { constants } = require("../entities/helper");
 
 async function sendMessagesDefault(client, message) {
+  console.log(message.from);
   switch (message.from) {
     case constants.systemConst.GROUP_1:
+      console.log("GROUP 1 ", message.from);
       break;
     case constants.systemConst.GROUP_2:
+      console.log("GROUP 2 ", message.from);
       break;
     default:
       // break;
